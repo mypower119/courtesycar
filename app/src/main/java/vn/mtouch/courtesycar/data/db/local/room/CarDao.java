@@ -1,5 +1,6 @@
 package vn.mtouch.courtesycar.data.db.local.room;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -19,8 +20,8 @@ import vn.mtouch.courtesycar.data.db.model.roomdb.CarDBO;
 
 @Dao
 public interface CarDao {
-    @Query("Select * from borrow_contract")
-    List<CarDBO> getAllContract();
+    @Query("Select * from car")
+    LiveData<List<CarDBO>> getAllContract();
 
     @Insert
     long insertCar(CarDBO dbo);
@@ -31,6 +32,6 @@ public interface CarDao {
     @Delete
     void deleteCar(CarDBO dbo);
 
-    @Delete
-    void deleteAllCar(CarDao... dbos);
+    @Query("SELECT * from car where id = :id")
+    CarDBO findCarById(long id);
 }

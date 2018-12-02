@@ -39,14 +39,18 @@ dependencies {
     // butter knife (bind view)
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    // ormlite (local database sqlite)
-    implementation 'com.j256.ormlite:ormlite-android:4.48'
+
     implementation 'com.android.support:multidex:1.0.3'
 
     // Room
-    implementation 'android.arch.persistence.room:runtime:1.0.0'
-    annotationProcessor 'android.arch.persistence.room:compiler:1.0.0'
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
 
     // LiveData
     implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation 'org.jetbrains:annotations:15.0'
+
+    // rxjava
+    implementation "io.reactivex:rxjava:1.2.0"
+    implementation "io.reactivex:rxandroid:1.2.1"
 }

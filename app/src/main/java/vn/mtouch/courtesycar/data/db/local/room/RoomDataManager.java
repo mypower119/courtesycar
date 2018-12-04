@@ -1,17 +1,23 @@
 package vn.mtouch.courtesycar.data.db.local.room;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Room;
+import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import java.util.List;
 
 import rx.Completable;
 import rx.functions.Action0;
+import rx.schedulers.Schedulers;
+import vn.mtouch.courtesycar.data.db.Repository;
 import vn.mtouch.courtesycar.data.db.model.BorrowContractModel;
 import vn.mtouch.courtesycar.data.db.model.CarModel;
 import vn.mtouch.courtesycar.data.db.model.roomdb.BorrowContractDBO;
 import vn.mtouch.courtesycar.data.db.model.roomdb.CarDBO;
+import vn.mtouch.courtesycar.utils.SimpleCompletableSubscriber;
 
 /**
  * Copyright (C) 2016, Mobitouch.
@@ -50,6 +56,25 @@ public class RoomDataManager {
     public synchronized void initForUser(Context context) {
         if (mCourtesyCarDatabase == null) {
             mCourtesyCarDatabase = Room.databaseBuilder(context, CourtesyCarDatabase.class, "courtesy_car_db")
+                    .addCallback(new RoomDatabase.Callback() {
+                @Override
+                public void onCreate(@NonNull SupportSQLiteDatabase db) {
+                    super.onCreate(db);
+                    Repository.getInstance().initDummyData()
+                            .subscribeOn(Schedulers.io())
+                            .subscribe(new SimpleCompletableSubscriber() {
+                                @Override
+                                public void onError(Throwable e) {
+                                    super.onError(e);
+                                }
+                            });
+                }
+
+                @Override
+                public void onOpen(@NonNull SupportSQLiteDatabase db) {
+                    super.onOpen(db);
+                }
+            })
 //                    .addMigrations(mUserDBMigration_1_2)
 //                    .addCallback(mUserDBCallback)
                     .build();

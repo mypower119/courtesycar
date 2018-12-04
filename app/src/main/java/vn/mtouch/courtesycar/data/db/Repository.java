@@ -69,11 +69,9 @@ public class Repository {
 
     public Completable initDummyData() {
         return Completable.fromAction(() -> {
-            CarModel carModel = new CarModel();
-            for(int i = 0; i < 3000; i++) {
-                carModel.setCarCode( i + " code");
-                carModel.setCarName( i + " name");
-                saveCar(carModel);
+            List<CarModel> cars = CarModel.getInitDataFirst();
+            for(CarModel item : cars) {
+                saveCar(item);
             }
         });
     }

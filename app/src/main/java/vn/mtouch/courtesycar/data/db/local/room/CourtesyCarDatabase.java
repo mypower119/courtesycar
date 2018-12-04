@@ -5,6 +5,7 @@ import android.arch.persistence.room.Database;
 import android.arch.persistence.room.DatabaseConfiguration;
 import android.arch.persistence.room.InvalidationTracker;
 import android.arch.persistence.room.RoomDatabase;
+import android.support.annotation.NonNull;
 
 import vn.mtouch.courtesycar.data.db.model.roomdb.BorrowContractDBO;
 import vn.mtouch.courtesycar.data.db.model.roomdb.CarDBO;

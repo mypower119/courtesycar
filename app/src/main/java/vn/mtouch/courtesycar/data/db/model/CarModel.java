@@ -1,5 +1,7 @@
 package vn.mtouch.courtesycar.data.db.model;
 
+import java.util.ArrayList;
+
 import rx.Completable;
 
 /**
@@ -24,8 +26,7 @@ public class CarModel implements Comparable {
         this.carCode = carModel.getCarCode();
     }
 
-    public CarModel(long id, String carName, String carCode) {
-        this.id = id;
+    public CarModel(String carName, String carCode) {
         this.carName = carName;
         this.carCode = carCode;
     }
@@ -58,5 +59,17 @@ public class CarModel implements Comparable {
     public int compareTo(Object o) {
         CarModel carModel = (CarModel) o;
         return (carCode + "").equals(carModel.getCarCode()) && (carName + "").equals(carModel.getCarName()) ? 0 : 1;
+    }
+
+    public static ArrayList<CarModel> getInitDataFirst() {
+        ArrayList<CarModel> arrayList = new ArrayList<>();
+        arrayList.add(new CarModel("Honda Accord", "PXB747"));
+        arrayList.add(new CarModel("Nissan Maxima", "YPS617"));
+        arrayList.add(new CarModel("Audi A4", "1HO4HG"));
+        arrayList.add(new CarModel("Honda Jazz", "1LB3NT"));
+        arrayList.add(new CarModel("Mitsubishi Pajero", "1KW6IT"));
+        arrayList.add(new CarModel("Ford Fiesta", "1NP4IH"));
+        arrayList.add(new CarModel("Subaru Liberty", "1KC2YS"));
+        return arrayList;
     }
 }

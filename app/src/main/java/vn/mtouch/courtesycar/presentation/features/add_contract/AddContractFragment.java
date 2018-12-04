@@ -1,13 +1,20 @@
 package vn.mtouch.courtesycar.presentation.features.add_contract;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,6 +40,7 @@ import vn.mtouch.courtesycar.R;
 import vn.mtouch.courtesycar.data.db.model.BorrowContractModel;
 import vn.mtouch.courtesycar.data.db.model.CarModel;
 import vn.mtouch.courtesycar.data.db.model.LicenseModel;
+import vn.mtouch.courtesycar.data.prefs.ConstantsPrefs;
 import vn.mtouch.courtesycar.utils.CollectionUtils;
 import vn.mtouch.courtesycar.utils.ConvertUtil;
 import vn.mtouch.courtesycar.utils.DialogUtils;
@@ -60,6 +68,10 @@ public class AddContractFragment extends Fragment {
     Spinner spinner;
     @BindView(R.id.spn_license_type)
     Spinner spnLicenseType;
+    @BindView(R.id.wv_contract)
+    WebView wvContract;
+    @BindView(R.id.tv_contract)
+    TextView tvContract;
 
     private static final String EXTRA_CONTRACT = "EXTRA_CONTRACT";
     private AddContractViewModel mViewModel;
@@ -98,18 +110,47 @@ public class AddContractFragment extends Fragment {
     }
 
     private void setupUi() {
+        wvContract.setVisibility(View.GONE);
+//        WebSettings webSettings = wvContract.getSettings();
+//        webSettings.setBuiltInZoomControls(false);
+//        webSettings.setJavaScriptEnabled(true);
+//        webSettings.setDisplayZoomControls(false);
+//        webSettings.setLoadWithOverviewMode(true);
+//
+//        wvContract.setVerticalScrollBarEnabled(false);
+//        wvContract.setHorizontalScrollBarEnabled(false);
+//        wvContract.setDrawingCacheEnabled(true);
+//
+//        wvContract.getSettings().setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+//
+//        wvContract.setWebViewClient(new WebViewClient());
+        // Force links and redirects to open in the WebView instead of in a browser
+//        wvContract.setWebViewClient(new AppWebViewClients(mProgressbar, new AppWebViewClients.OnWebViewClientsListener() {
+//            @Override
+//            public void onPageFinished() {
+//                scrollView.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        new Handler().postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                print();
+//                            }
+//                        }, 500);
+//                    }
+//                });
+//            }
+//        }));
+        String contextHtML = ConstantsPrefs.getStrHTML(getActivity());
+        //wvContract.loadData(contextHtML,"text/html", "utf-8");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            tvContract.setText(Html.fromHtml(contextHtML, Html.FROM_HTML_MODE_COMPACT));
+        } else {
+            tvContract.setText(Html.fromHtml(contextHtML));
+        }
         if (contractModel != null) {
             isCreate = false;
-            Calendar timeIn = Calendar.getInstance();
             Calendar timeOut = Calendar.getInstance();
-            if(contractModel.getTimeIn() != null) {
-                timeIn.setTimeInMillis(contractModel.getTimeIn());
-                try {
-                    tvTimeIn.setText(df.format(timeIn.getTime()));
-                }catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
             if(contractModel.getTimeOut() != null) {
                 timeOut.setTimeInMillis(contractModel.getTimeOut());
                 try {
@@ -129,6 +170,15 @@ public class AddContractFragment extends Fragment {
             isCreate = true;
             cbAgree.setChecked(false);
         }
+        Calendar timeIn = Calendar.getInstance();
+        if(contractModel.getTimeIn() != null) {
+            timeIn.setTimeInMillis(contractModel.getTimeIn());
+            try {
+                tvTimeIn.setText(df.format(timeIn.getTime()));
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         mAdapterCars = new ArrayAdapter<>(getActivity(), R.layout.row_spn_1, new ArrayList<>());
         mAdapterCars.setDropDownViewResource(R.layout.row_spn_dropdown_1);
         spinner.setAdapter(mAdapterCars);
@@ -141,7 +191,7 @@ public class AddContractFragment extends Fragment {
                         && (contractModel.getCarName() + "").equals(carModels.get(i).getCarName()) ) {
                     positionSelect = i;
                 }
-                listStrAccount.add(carModels.get(i).getCarName());
+                listStrAccount.add(carModels.get(i).getCarName() + " " + carModels.get(i).getCarCode());
             }
             String[] items = new String[listStrAccount.size()];
             items = listStrAccount.toArray(items);
@@ -176,10 +226,30 @@ public class AddContractFragment extends Fragment {
 
     private boolean isValidInput() {
         // từ trên xuống
+        if(TextUtils.isEmpty(edtFullName.getText().toString())) {
+            edtFullName.setError("empty");
+            edtFullName.requestFocus();
+            showErrorToast("input invalid");
+            return false;
+        }
+
+        if(TextUtils.isEmpty(edtDateOfBirth.getText().toString())) {
+            edtDateOfBirth.setError("empty");
+            edtDateOfBirth.requestFocus();
+            showErrorToast("input invalid");
+            return false;
+        }
+
+        if(TextUtils.isEmpty(edtPhoneNumber.getText().toString())) {
+            edtPhoneNumber.setError("empty");
+            edtPhoneNumber.requestFocus();
+            showErrorToast("input invalid");
+            return false;
+        }
 
         if(!cbAgree.isChecked()) {
             cbAgree.requestFocus();
-            showErrorToast(getActivity().getResources().getString(R.string.not_empty));
+            showErrorToast("must to agree contract");
             return false;
         }
         return true;

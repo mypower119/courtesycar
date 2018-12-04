@@ -64,7 +64,6 @@ public class CourtesyCarApp extends MultiDexApplication {
         @Override
         public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
             CourtesyCarApp.activity = activity;
-
         }
 
         @Override

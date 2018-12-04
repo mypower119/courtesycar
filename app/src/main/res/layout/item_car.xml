@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    android:padding="8dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:toolsText="http://schemas.android.com/tools"
+    android:gravity="center"
     android:orientation="horizontal">
 
     <vn.mtouch.courtesycar.presentation.custom_view.CustomFontTextView
+        style="@style/textViewStyle"
         android:id="@+id/tv_car_name"
         android:layout_weight="1"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         toolsText:text = "Honda AirBlade 150cc" />
 
     <vn.mtouch.courtesycar.presentation.custom_view.CustomFontTextView
+        style="@style/textViewStyle"
         android:id="@+id/tv_car_code"
         android:layout_weight="1"
         toolsText:text = "N1-01 678182"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content" />
+
+    <ImageView
+        android:src="@drawable/ic_remove"
+        android:id="@+id/img_delete"
+        android:layout_width="36dp"
+        android:layout_height="36dp" />
 </LinearLayout>

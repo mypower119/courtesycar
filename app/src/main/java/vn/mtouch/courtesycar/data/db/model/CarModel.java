@@ -18,6 +18,12 @@ public class CarModel implements Comparable {
 
     }
 
+    public CarModel(CarModel carModel) {
+        this.id = carModel.id;
+        this.carName = carModel.getCarName();
+        this.carCode = carModel.getCarCode();
+    }
+
     public CarModel(long id, String carName, String carCode) {
         this.id = id;
         this.carName = carName;

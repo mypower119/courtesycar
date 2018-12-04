@@ -1,6 +1,8 @@
 package vn.mtouch.courtesycar.data.db.local.room;
 
+import vn.mtouch.courtesycar.data.db.model.BorrowContractModel;
 import vn.mtouch.courtesycar.data.db.model.CarModel;
+import vn.mtouch.courtesycar.data.db.model.roomdb.BorrowContractDBO;
 import vn.mtouch.courtesycar.data.db.model.roomdb.CarDBO;
 
 /**
@@ -23,5 +25,18 @@ public class Mappers {
         }
 
         return carModel;
+    };
+
+    public static final Mapper<BorrowContractDBO, BorrowContractModel> FROM_DBO_TO_CONTRACT = dbo -> {
+        BorrowContractModel contract = new BorrowContractModel();
+
+        if (dbo != null) {
+            contract = new BorrowContractModel(dbo.id,
+                    dbo.carName, dbo.carCode,
+                    dbo.timeIn, dbo.timeOut,
+                    dbo.fullName, dbo.dateOfBirth,
+                    dbo.phoneNumber, dbo.state, dbo.licenseType);
+        }
+        return contract;
     };
 }

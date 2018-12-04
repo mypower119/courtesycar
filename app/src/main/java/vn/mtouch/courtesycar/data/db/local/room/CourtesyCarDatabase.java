@@ -32,4 +32,6 @@ public abstract class CourtesyCarDatabase extends RoomDatabase {
     protected InvalidationTracker createInvalidationTracker() {
         return null;
     }
+
+
 }

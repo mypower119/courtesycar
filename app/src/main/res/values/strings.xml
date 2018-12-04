@@ -11,4 +11,28 @@
     <string name="car_name">Car name</string>
     <string name="car_code">Car code</string>
     <string name="save">Save</string>
+    <string name="full_name">Full name</string>
+    <string name="time_in">Time in</string>
+    <string name="time_out">Time out</string>
+    <string name="courtesy_car">Courtesy car</string>
+    <string name="license_type">License type</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="phone_number">Phone number</string>
+    <string name="area">Area</string>
+    <string name="agree">Agree</string>
+    <string name="contract_information">jsdsdjsjkdfksjdfjksfjkkjfjkfjkdsfjksfakjfhakshfdkjhajkshjkdshkfkjsahfdksfjksdjf
+    sdfnsjflsjdfhshdfjkshfjkhdjkshfjkshjkfhsjkhfdjkhsfjkhsjkfhjkshfjkshkjfhdjkshfkjshfk
+    sfkjhsjdfhskjhdfjkhsdfhsjkhfkjdhfkjshdjkfhsjkfhjkshdkjfhsjkdhfkjshfskhfkjhsjkfdjks
+    sjdhfjkshfkjdhkjfhskhfkjshdkjfhsjkdhfjkdshkjfhdsjkfhjkshfkjshjkfhkdjshfkkfjskjdfhjkjsdsdjsjkdfksjdfjksfjkkjfjkfjkdsfjksfakjfhakshfdkjhajkshjkdshkfkjsahfdksfjksdjf
+    sdfnsjflsjdfhshdfjkshfjkhdjkshfjkshjkfhsjkhfdjkhsfjkhsjkfhjkshfjkshkjfhdjkshfkjshfk
+    sfkjhsjdfhskjhdfjkhsdfhsjkhfkjdhfkjshdjkfhsjkfhjkshdkjfhsjkdhfkjshfskhfkjhsjkfdjks
+    sjdhfjkshfkjdhkjfhskhfkjshdkjfhsjkdhfjkdshkjfhdsjkfhjkshfkjshjkfhkdjshfkkfjskjdfhjkjsdsdjsjkdfksjdfjksfjkkjfjkfjkdsfjksfakjfhakshfdkjhajkshjkdshkfkjsahfdksfjksdjf
+    sdfnsjflsjdfhshdfjkshfjkhdjkshfjkshjkfhsjkhfdjkhsfjkhsjkfhjkshfjkshkjfhdjkshfkjshfk
+    sfkjhsjdfhskjhdfjkhsdfhsjkhfkjdhfkjshdjkfhsjkfhjkshdkjfhsjkdhfkjshfskhfkjhsjkfdjks
+    sjdhfjkshfkjdhkjfhskhfkjshdkjfhsjkdhfjkdshkjfhdsjkfhjkshfkjshjkfhkdjshfkkfjskjdfhjkjsdsdjsjkdfksjdfjksfjkkjfjkfjkdsfjksfakjfhakshfdkjhajkshjkdshkfkjsahfdksfjksdjf
+    sdfnsjflsjdfhshdfjkshfjkhdjkshfjkshjkfhsjkhfdjkhsfjkhsjkfhjkshfjkshkjfhdjkshfkjshfk
+    sfkjhsjdfhskjhdfjkhsdfhsjkhfkjdhfkjshdjkfhsjkfhjkshdkjfhsjkdhfkjshfskhfkjhsjkfdjks
+    sjdhfjkshfkjdhkjfhskhfkjshdkjfhsjkdhfjkdshkjfhdsjkfhjkshfkjshjkfhkdjshfkkfjskjdfhjk</string>
+
+    <string name="not_empty">Not empty</string>
 </resources>

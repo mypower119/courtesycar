@@ -1,7 +1,9 @@
 package vn.mtouch.courtesycar.utils;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
@@ -11,6 +13,10 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.widget.DatePicker;
+import android.widget.TimePicker;
+
+import java.util.Calendar;
 
 /**
  * Copyright (C) 2017, VNG Corporation.
@@ -31,6 +37,32 @@ public final class DialogUtils {
         dialog.setMessage(text);
         dialog.show();
         return dialog;
+    }
+
+    public interface OnDateTimeChange {
+        void onDateTimeChange(long time);
+    }
+
+    public static void showDateTimePicker(final Context context, final OnDateTimeChange listener) {
+        final Calendar currentDate = Calendar.getInstance();
+        final Calendar returnDateCalendar = Calendar.getInstance();
+        new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                if(!view.isShown()) {
+                    return;
+                }
+                returnDateCalendar.set(year, monthOfYear, dayOfMonth);
+                new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        returnDateCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        returnDateCalendar.set(Calendar.MINUTE, minute);
+                        listener.onDateTimeChange(returnDateCalendar.getTimeInMillis());
+                    }
+                }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), false).show();
+            }
+        }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
     }
 
     public static Dialog showConfirmDeleteConversationDialog(@NonNull final Context context,

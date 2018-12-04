@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import vn.mtouch.courtesycar.R;
 import vn.mtouch.courtesycar.presentation.base_view.BaseActivity;
 import vn.mtouch.courtesycar.presentation.features.list_car.ListCarFragment;
+import vn.mtouch.courtesycar.presentation.features.list_contract.ContractFragment;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -35,7 +36,7 @@ public class MainActivity extends BaseActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        replaceFragment(R.id.fragment, ListCarFragment.newInstance());
+        replaceFragment(R.id.fragment, ContractFragment.newInstance(1));
     }
 
     @Override
@@ -78,16 +79,9 @@ public class MainActivity extends BaseActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+            replaceFragment(R.id.fragment, ContractFragment.newInstance(1));
         } else if (id == R.id.nav_gallery) {
             replaceFragment(R.id.fragment, ListCarFragment.newInstance());
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

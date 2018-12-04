@@ -2,19 +2,17 @@ package vn.mtouch.courtesycar.data.db;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
-import android.util.Log;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import rx.Scheduler;
+import rx.Completable;
 import rx.schedulers.Schedulers;
-import vn.mtouch.courtesycar.data.db.local.room.Mapper;
 import vn.mtouch.courtesycar.data.db.local.room.Mappers;
 import vn.mtouch.courtesycar.data.db.local.room.RoomDataManager;
+import vn.mtouch.courtesycar.data.db.model.BorrowContractModel;
 import vn.mtouch.courtesycar.data.db.model.CarModel;
+import vn.mtouch.courtesycar.data.db.model.roomdb.BorrowContractDBO;
 import vn.mtouch.courtesycar.data.db.model.roomdb.CarDBO;
 import vn.mtouch.courtesycar.utils.SimpleCompletableSubscriber;
 
@@ -58,8 +56,60 @@ public class Repository {
         });
     }
 
-    public void saveCar(CarDBO carDBO) {
-        mRoomDataManager.asyncSaveCar(carDBO).subscribeOn(Schedulers.io()).subscribe(new SimpleCompletableSubscriber() {
+    public LiveData<List<BorrowContractModel>> getContracts() {
+        LiveData<List<BorrowContractDBO>> contracts = mRoomDataManager.getContracts();
+        return Transformations.map(contracts, dboList -> {
+            List<BorrowContractModel> ret = new ArrayList<>();
+            for(BorrowContractDBO itemBDO: dboList) {
+                ret.add(Mappers.FROM_DBO_TO_CONTRACT.map(itemBDO));
+            }
+            return ret;
+        });
+    }
+
+    public Completable initDummyData() {
+        return Completable.fromAction(() -> {
+            CarModel carModel = new CarModel();
+            for(int i = 0; i < 3000; i++) {
+                carModel.setCarCode( i + " code");
+                carModel.setCarName( i + " name");
+                saveCar(carModel);
+            }
+        });
+    }
+
+    public void saveCar(CarModel carModel) {
+        mRoomDataManager.asyncSaveCar(carModel).subscribeOn(Schedulers.io()).subscribe(new SimpleCompletableSubscriber() {
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void addContract(BorrowContractModel contract) {
+        mRoomDataManager.asyncSaveContract(contract).subscribeOn(Schedulers.io()).subscribe(new SimpleCompletableSubscriber() {
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void updateContract(BorrowContractModel contract) {
+        mRoomDataManager.asyncUpdateContract(contract).subscribeOn(Schedulers.io()).subscribe(new SimpleCompletableSubscriber() {
+            @Override
+            public void onError(Throwable e) {
+                super.onError(e);
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void updateCar(CarModel carModel) {
+        mRoomDataManager.asyncUpdateCar(carModel).subscribeOn(Schedulers.io()).subscribe(new SimpleCompletableSubscriber() {
             @Override
             public void onError(Throwable e) {
                 super.onError(e);
@@ -77,5 +127,16 @@ public class Repository {
 
             }
         });
+    }
+
+    public void deleteContract(long id) {
+        mRoomDataManager.asyncDeleteContract(id)
+                .subscribeOn(Schedulers.io())
+                .subscribe(new SimpleCompletableSubscriber() {
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 }

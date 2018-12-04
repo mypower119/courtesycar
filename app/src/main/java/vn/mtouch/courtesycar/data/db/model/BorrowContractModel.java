@@ -7,20 +7,26 @@ package vn.mtouch.courtesycar.data.db.model;
  * @since 12/1/18
  */
 
-public class BorrowContactModel {
+public class BorrowContractModel {
+    public static final int STATE_NEW_BORROW = 0;
+    public static final int STATE_RETURNED = STATE_NEW_BORROW + 1;
+
     private long id;
     private String carName;
     private String carCode;
-    private String timeIn;
-    private String timeOut;
+    private Long timeIn;
+    private Long timeOut;
     private String fullName;
     private String dateOfBirth;
     private String phoneNumber;
-    private Integer state;
+    private Integer state = STATE_NEW_BORROW;
+    private String licenseType;
 
-    public BorrowContactModel(long id, String carName, String carCode, String timeIn,
-                              String timeOut, String fullName, String dateOfBirth,
-                              String phoneNumber, Integer state) {
+    public BorrowContractModel() {
+
+    }
+
+    public BorrowContractModel(long id, String carName, String carCode, Long timeIn, Long timeOut, String fullName, String dateOfBirth, String phoneNumber, Integer state, String licenseType) {
         this.id = id;
         this.carName = carName;
         this.carCode = carCode;
@@ -30,6 +36,15 @@ public class BorrowContactModel {
         this.dateOfBirth = dateOfBirth;
         this.phoneNumber = phoneNumber;
         this.state = state;
+        this.licenseType = licenseType;
+    }
+
+    public String getLicenseType() {
+        return licenseType;
+    }
+
+    public void setLicenseType(String licensetype) {
+        this.licenseType = licensetype;
     }
 
     public long getId() {
@@ -56,19 +71,19 @@ public class BorrowContactModel {
         this.carCode = carCode;
     }
 
-    public String getTimeIn() {
+    public Long getTimeIn() {
         return timeIn;
     }
 
-    public void setTimeIn(String timeIn) {
+    public void setTimeIn(Long timeIn) {
         this.timeIn = timeIn;
     }
 
-    public String getTimeOut() {
+    public Long getTimeOut() {
         return timeOut;
     }
 
-    public void setTimeOut(String timeOut) {
+    public void setTimeOut(Long timeOut) {
         this.timeOut = timeOut;
     }
 

@@ -32,10 +32,10 @@ public class BorrowContractDBO {
     public String carCode;
 
     @ColumnInfo(name = "time_in")
-    public String timeIn;
+    public Long timeIn;
 
     @ColumnInfo(name = "time_out")
-    public String timeOut;
+    public Long timeOut;
 
     @ColumnInfo(name = "full_name")
     public String fullName;
@@ -48,5 +48,8 @@ public class BorrowContractDBO {
 
     @ColumnInfo(name = "state")
     public Integer state;
+
+    @ColumnInfo(name = "license_type")
+    public String licenseType;
 
 }

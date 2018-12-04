@@ -1,20 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+<LinearLayout android:orientation="horizontal"
+    android:gravity="center"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/item_number"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:orientation="vertical">
+        <vn.mtouch.courtesycar.presentation.custom_view.CustomFontTextView
+            style="@style/textViewStyle"
+            android:id="@+id/tv_fullName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/content"
-        android:layout_width="wrap_content"
+        <vn.mtouch.courtesycar.presentation.custom_view.CustomFontTextView
+            style="@style/textViewStyle"
+            android:id="@+id/tv_car_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <vn.mtouch.courtesycar.presentation.custom_view.CustomFontTextView
+            style="@style/textViewStyle"
+            android:id="@+id/tv_car_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_weight="1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:textAppearance="?attr/textAppearanceListItem" />
+        android:orientation="vertical">
+        <vn.mtouch.courtesycar.presentation.custom_view.CustomFontTextView
+            style="@style/textViewStyle"
+            android:id="@+id/tv_phone_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <vn.mtouch.courtesycar.presentation.custom_view.CustomFontTextView
+            style="@style/textViewStyle"
+            android:id="@+id/tv_time_in"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <vn.mtouch.courtesycar.presentation.custom_view.CustomFontTextView
+            style="@style/textViewStyle"
+            android:textColor="@color/colorAccent"
+            android:id="@+id/tv_time_out"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/img_remove"
+        android:src="@drawable/ic_remove"
+        android:layout_width="36dp"
+        android:layout_height="36dp" />
+
 </LinearLayout>

@@ -13,6 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.mtouch.courtesycar.R;
 import vn.mtouch.courtesycar.data.db.Repository;
+import vn.mtouch.courtesycar.data.db.model.CarModel;
 import vn.mtouch.courtesycar.data.db.model.roomdb.CarDBO;
 import vn.mtouch.courtesycar.presentation.base_view.BaseDialog;
 
@@ -30,9 +31,14 @@ public class EditCarDialog extends BaseDialog {
     EditText edtCode;
     @BindView(R.id.btn_save)
     Button btnSave;
+    CarModel carModel;
 
     public static EditCarDialog newInstance() {
         return new EditCarDialog();
+    }
+
+    public void setCarModel(CarModel carModel) {
+        this.carModel = new CarModel(carModel);
     }
 
     @Nullable
@@ -40,17 +46,30 @@ public class EditCarDialog extends BaseDialog {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_add_car, container, false);
         ButterKnife.bind(this, view);
+        setupUi();
         setupEvent();
         return view;
     }
 
+    private void setupUi(){
+        if(carModel != null) {
+            edtCode.setText(carModel.getCarCode() + "");
+            edtName.setText(carModel.getCarName() + "");
+        }
+    }
+
     private void setupEvent(){
         btnSave.setOnClickListener(v -> {
-            CarDBO carDBO = new CarDBO();
-            carDBO.carCode = edtCode.getText().toString();
-            carDBO.carName = edtName.getText().toString();
-
-            Repository.getInstance().saveCar(carDBO);
+            if(carModel == null) {
+                carModel = new CarModel();
+                carModel.setCarCode(edtCode.getText().toString());
+                carModel.setCarName(edtName.getText().toString());
+                Repository.getInstance().saveCar(carModel);
+            } else {
+                carModel.setCarCode(edtCode.getText().toString());
+                carModel.setCarName(edtName.getText().toString());
+                Repository.getInstance().updateCar(carModel);
+            }
             dismiss();
         });
     }

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.List;
 
@@ -38,12 +39,14 @@ public class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.CarViewHolder>
     }
 
     public void setItems(List<CarModel> newItems) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new CarDiffCallback(mItems, newItems));
-        diffResult.dispatchUpdatesTo(this);
-        this.mItems.clear();
-        this.mItems.addAll(newItems);
-        //notifyDataSetChanged();
-        LogManager.e("Difff", "init data");
+        synchronized (LOCK){
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new CarDiffCallback(mItems, newItems));
+            diffResult.dispatchUpdatesTo(this);
+            this.mItems.clear();
+            this.mItems.addAll(newItems);
+            //notifyDataSetChanged();
+            LogManager.e("Difff", "init data");
+        }
     }
 
     @NonNull
@@ -59,7 +62,7 @@ public class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.CarViewHolder>
             LogManager.e("Difff", "onBindViewHolder payload isempty" + position);
             super.onBindViewHolder(holder, position, payloads);
         } else {
-            LogManager.e("Difff", "onBindViewHolder change attribute" + position);
+            LogManager.e("Difff", "onBindViewHolder change attribute " + position);
             Bundle o = (Bundle) payloads.get(0);
             for (String key : o.keySet()) {
                 if(key.equals(CarDiffCallback.KEY_CODE)){
@@ -85,19 +88,30 @@ public class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.CarViewHolder>
         }
     }
 
+    public interface OnCarAdapterListener {
+        void onItemClick(CarModel carModel);
+    }
+
+    OnCarAdapterListener mListener;
+
+    public void setListener(OnCarAdapterListener listener) {
+        this.mListener = listener;
+    }
+
     public class CarViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_car_name)
         CustomFontTextView tvCarName;
         @BindView(R.id.tv_car_code)
         CustomFontTextView tvCarCode;
+        @BindView(R.id.img_delete)
+        ImageView imgDelete;
 
         public CarViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mViewModel.asyncDeleteCar(mItems.get(getAdapterPosition()).getId());
+            itemView.setOnClickListener(v -> {
+                if(mListener != null) {
+                    mListener.onItemClick(mItems.get(getAdapterPosition()));
                 }
             });
         }
@@ -105,6 +119,12 @@ public class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.CarViewHolder>
         public void onBind(CarModel item) {
             tvCarCode.setText(item.getCarCode() + "");
             tvCarName.setText(item.getCarName());
+            imgDelete.setOnClickListener(v -> {
+                int positionChange = getAdapterPosition();
+                if(positionChange != -1) {
+                    mViewModel.asyncDeleteCar(mItems.get(positionChange).getId());
+                }
+            });
         }
     }
 }

@@ -34,4 +34,7 @@ public interface BorrowContractDao {
 
     @Delete
     void deleteAllContract(BorrowContractDBO... dbos);
+
+    @Query("Select * from borrow_contract where id = :id")
+    BorrowContractDBO findContactById(long id);
 }

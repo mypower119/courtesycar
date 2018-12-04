@@ -21,7 +21,7 @@ import vn.mtouch.courtesycar.data.db.model.roomdb.CarDBO;
 @Dao
 public interface CarDao {
     @Query("Select * from car")
-    LiveData<List<CarDBO>> getAllContract();
+    LiveData<List<CarDBO>> getAllCars();
 
     @Insert
     long insertCar(CarDBO dbo);

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import vn.mtouch.courtesycar.R;
+import vn.mtouch.courtesycar.data.db.model.CarModel;
 import vn.mtouch.courtesycar.presentation.base_view.BaseFragment;
 import vn.mtouch.courtesycar.presentation.features.add_car.EditCarDialog;
 
@@ -47,7 +49,19 @@ public class ListCarFragment extends BaseFragment {
 
     private void initUi() {
         mAdapter = new CarsAdapter(getActivity(), new ArrayList<>(), mViewModel);
-        rvCars.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAdapter.setListener(new CarsAdapter.OnCarAdapterListener() {
+            @Override
+            public void onItemClick(CarModel carModel) {
+                EditCarDialog addCarDialog = EditCarDialog.newInstance();
+                addCarDialog.setCarModel(carModel);
+                addCarDialog.show(getFragmentManager(), null);
+            }
+        });
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        rvCars.setLayoutManager(linearLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvCars.getContext(),
+                linearLayoutManager.getOrientation());
+        rvCars.addItemDecoration(dividerItemDecoration);
         rvCars.setAdapter(mAdapter);
         mViewModel.getCars().observe(this, carDBOS -> {
             mAdapter.setItems(carDBOS);

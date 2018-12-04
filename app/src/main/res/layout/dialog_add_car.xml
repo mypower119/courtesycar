@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <EditText
+            style="@style/editTextStyle"
             android:hint="@string/car_name"
             android:id="@+id/edt_name"
             android:layout_width="match_parent"
@@ -19,6 +20,7 @@
         android:layout_height="wrap_content">
 
         <EditText
+            style="@style/editTextStyle"
             android:hint="@string/car_code"
             android:id="@+id/edt_code"
             android:layout_width="match_parent"
@@ -26,6 +28,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <Button
+        style="@style/buttonStyle"
         android:id="@+id/btn_save"
         android:text="@string/save"
         android:layout_width="match_parent"

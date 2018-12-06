@@ -69,6 +69,10 @@ public final class AndroidUtilities {
         return sDensity * dp;
     }
 
+    public static Handler getsUIHandler() {
+        return sUIHandler;
+    }
+
     public static String getDeviceId() {
         Context context = CourtesyCarApp.getInstance();
         if (TextUtils.isEmpty(sDeviceId)) {

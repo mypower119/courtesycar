@@ -21,6 +21,7 @@ public class Mappers {
         if (dbo != null) {
             carModel.setCarCode(dbo.carCode);
             carModel.setCarName(dbo.carName);
+            carModel.setQrCode(dbo.qrCode);
             carModel.setId(dbo.id);
         }
 
@@ -35,7 +36,7 @@ public class Mappers {
                     dbo.carName, dbo.carCode,
                     dbo.timeIn, dbo.timeOut,
                     dbo.fullName, dbo.dateOfBirth,
-                    dbo.phoneNumber, dbo.state, dbo.licenseType);
+                    dbo.phoneNumber, dbo.state, dbo.licenseType, dbo.qrCode);
         }
         return contract;
     };

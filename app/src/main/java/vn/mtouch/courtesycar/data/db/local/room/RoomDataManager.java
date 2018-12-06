@@ -89,44 +89,50 @@ public class RoomDataManager {
         return mCarDao.getAllCars();
     }
 
+    public List<CarDBO> findCarByQrCode(String qrCode) {
+        // can transfer here
+        return mCarDao.findCarByQrCode(qrCode);
+    }
+
+    public List<BorrowContractDBO> findContactBorrowingByQrcode(String qrCode) {
+        // can transfer here
+        return mBorrowContractDao.findContactBorrowingByQrcode(qrCode, BorrowContractModel.STATE_NEW_BORROW);
+    }
+
     public LiveData<List<BorrowContractDBO>> getContracts() {
         // can transfer here
         return mBorrowContractDao.getAllContract();
     }
 
     public Completable asyncSaveCar(final CarModel carModel) {
-        return Completable.fromAction(new Action0() {
-            @Override
-            public void call() {
-                CarDBO carDBO = new CarDBO();
-                carDBO.carName = carModel.getCarName();
-                carDBO.carCode = carModel.getCarCode();
-                mCarDao.insertCar(carDBO);
-            }
+        return Completable.fromAction(() -> {
+            CarDBO carDBO = new CarDBO();
+            carDBO.carName = carModel.getCarName();
+            carDBO.carCode = carModel.getCarCode();
+            carDBO.qrCode = carModel.getQrCode();
+            mCarDao.insertCar(carDBO);
         });
     }
 
     public Completable asyncSaveContract(final BorrowContractModel contract) {
-        return Completable.fromAction(new Action0() {
-            @Override
-            public void call() {
-                BorrowContractDBO contractDBO = new BorrowContractDBO();
-                if(contract.getTimeOut() != null) {
-                    contract.setState(BorrowContractModel.STATE_RETURNED);
-                } else {
-                    contract.setState(BorrowContractModel.STATE_NEW_BORROW);
-                }
-                contractDBO.carName = contract.getCarName();
-                contractDBO.carCode = contract.getCarCode();
-                contractDBO.timeIn = contract.getTimeIn();
-                contractDBO.timeOut = contract.getTimeOut();
-                contractDBO.fullName = contract.getFullName();
-                contractDBO.dateOfBirth = contract.getDateOfBirth();
-                contractDBO.phoneNumber = contract.getPhoneNumber();
-                contractDBO.state = contract.getState();
-                contractDBO.licenseType = contract.getLicenseType();
-                mBorrowContractDao.insertBorrowContract(contractDBO);
+        return Completable.fromAction(() -> {
+            BorrowContractDBO contractDBO = new BorrowContractDBO();
+            if(contract.getTimeOut() != null) {
+                contract.setState(BorrowContractModel.STATE_RETURNED);
+            } else {
+                contract.setState(BorrowContractModel.STATE_NEW_BORROW);
             }
+            contractDBO.carName = contract.getCarName();
+            contractDBO.carCode = contract.getCarCode();
+            contractDBO.qrCode = contract.getQrCode();
+            contractDBO.timeIn = contract.getTimeIn();
+            contractDBO.timeOut = contract.getTimeOut();
+            contractDBO.fullName = contract.getFullName();
+            contractDBO.dateOfBirth = contract.getDateOfBirth();
+            contractDBO.phoneNumber = contract.getPhoneNumber();
+            contractDBO.state = contract.getState();
+            contractDBO.licenseType = contract.getLicenseType();
+            mBorrowContractDao.insertBorrowContract(contractDBO);
         });
     }
 
@@ -140,6 +146,7 @@ public class RoomDataManager {
             }
             contractDBO.carName = contract.getCarName();
             contractDBO.carCode = contract.getCarCode();
+            contractDBO.qrCode = contract.getQrCode();
             contractDBO.timeIn = contract.getTimeIn();
             contractDBO.timeOut = contract.getTimeOut();
             contractDBO.fullName = contract.getFullName();
@@ -155,6 +162,7 @@ public class RoomDataManager {
         return Completable.fromAction(() -> {
             CarDBO carDBO = mCarDao.findCarById(carModel.getId());
             carDBO.carName = carModel.getCarName();
+            carDBO.qrCode = carModel.getQrCode();
             carDBO.carCode = carModel.getCarCode();
             mCarDao.updateCar(carDBO);
         });

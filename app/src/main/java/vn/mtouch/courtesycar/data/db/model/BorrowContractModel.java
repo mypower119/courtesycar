@@ -14,6 +14,7 @@ public class BorrowContractModel {
     private long id;
     private String carName;
     private String carCode;
+    private String qrCode;
     private Long timeIn;
     private Long timeOut;
     private String fullName;
@@ -26,7 +27,10 @@ public class BorrowContractModel {
 
     }
 
-    public BorrowContractModel(long id, String carName, String carCode, Long timeIn, Long timeOut, String fullName, String dateOfBirth, String phoneNumber, Integer state, String licenseType) {
+    public BorrowContractModel(long id, String carName, String carCode,
+                               Long timeIn, Long timeOut, String fullName,
+                               String dateOfBirth, String phoneNumber, Integer state,
+                               String licenseType, String qrCode) {
         this.id = id;
         this.carName = carName;
         this.carCode = carCode;
@@ -37,6 +41,15 @@ public class BorrowContractModel {
         this.phoneNumber = phoneNumber;
         this.state = state;
         this.licenseType = licenseType;
+        this.qrCode = qrCode;
+    }
+
+    public String getQrCode() {
+        return qrCode;
+    }
+
+    public void setQrCode(String qrCode) {
+        this.qrCode = qrCode;
     }
 
     public String getLicenseType() {

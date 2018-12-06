@@ -10,6 +10,7 @@
 
     <string name="car_name">Car name</string>
     <string name="car_code">Car code</string>
+    <string name="qr_code">QRCode</string>
     <string name="save">Save</string>
     <string name="full_name">Full name</string>
     <string name="time_in">Time in</string>
@@ -22,4 +23,19 @@
     <string name="agree">Agree</string>
 
     <string name="not_empty">Not empty</string>
+    <string name="ok">Ok</string>
+    <string name="status">Filter by status</string>
+    <string name="from_date_to_date">Filter by date</string>
+    <string name="filter">Filter</string>
+
+    <string-array name="status_arr">
+        <item>@string/all</item>
+        <item>@string/borrowing</item>
+        <item>@string/returned</item>
+    </string-array>
+    <string name="all">All</string>
+    <string name="borrowing">Borrowing</string>
+    <string name="returned">Returned</string>
+    <string name="scanning_barcode"> --------- Scanning ---------</string>
+
 </resources>

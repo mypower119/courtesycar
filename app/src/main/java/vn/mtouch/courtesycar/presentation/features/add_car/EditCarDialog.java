@@ -27,6 +27,8 @@ import vn.mtouch.courtesycar.presentation.base_view.BaseDialog;
 public class EditCarDialog extends BaseDialog {
     @BindView(R.id.edt_name)
     EditText edtName;
+    @BindView(R.id.edt_qr_code)
+    EditText edtQrCode;
     @BindView(R.id.edt_code)
     EditText edtCode;
     @BindView(R.id.btn_save)
@@ -55,6 +57,7 @@ public class EditCarDialog extends BaseDialog {
         if(carModel != null) {
             edtCode.setText(carModel.getCarCode() + "");
             edtName.setText(carModel.getCarName() + "");
+            edtQrCode.setText(carModel.getQrCode() + "");
         }
     }
 
@@ -64,10 +67,12 @@ public class EditCarDialog extends BaseDialog {
                 carModel = new CarModel();
                 carModel.setCarCode(edtCode.getText().toString());
                 carModel.setCarName(edtName.getText().toString());
+                carModel.setQrCode(edtQrCode.getText().toString());
                 Repository.getInstance().saveCar(carModel);
             } else {
                 carModel.setCarCode(edtCode.getText().toString());
                 carModel.setCarName(edtName.getText().toString());
+                carModel.setQrCode(edtQrCode.getText().toString());
                 Repository.getInstance().updateCar(carModel);
             }
             dismiss();

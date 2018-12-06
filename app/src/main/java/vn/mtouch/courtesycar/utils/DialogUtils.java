@@ -43,6 +43,10 @@ public final class DialogUtils {
         void onDateTimeChange(long time);
     }
 
+    public interface OnDateChange {
+        void onDateChange(Calendar calendar);
+    }
+
     public static void showDateTimePicker(final Context context, final OnDateTimeChange listener) {
         final Calendar currentDate = Calendar.getInstance();
         final Calendar returnDateCalendar = Calendar.getInstance();
@@ -61,6 +65,21 @@ public final class DialogUtils {
                         listener.onDateTimeChange(returnDateCalendar.getTimeInMillis());
                     }
                 }, currentDate.get(Calendar.HOUR_OF_DAY), currentDate.get(Calendar.MINUTE), false).show();
+            }
+        }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
+    }
+
+    public static void showDatePicker(final Context context, final OnDateChange listener) {
+        final Calendar currentDate = Calendar.getInstance();
+        final Calendar returnDateCalendar = Calendar.getInstance();
+        new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                if(!view.isShown()) {
+                    return;
+                }
+                returnDateCalendar.set(year, monthOfYear, dayOfMonth);
+                listener.onDateChange(returnDateCalendar);
             }
         }, currentDate.get(Calendar.YEAR), currentDate.get(Calendar.MONTH), currentDate.get(Calendar.DATE)).show();
     }

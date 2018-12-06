@@ -1,6 +1,7 @@
 package vn.mtouch.courtesycar.presentation.features.list_car;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +12,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,6 +25,8 @@ import vn.mtouch.courtesycar.R;
 import vn.mtouch.courtesycar.data.db.model.CarModel;
 import vn.mtouch.courtesycar.presentation.base_view.BaseFragment;
 import vn.mtouch.courtesycar.presentation.features.add_car.EditCarDialog;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ListCarFragment extends BaseFragment {
 

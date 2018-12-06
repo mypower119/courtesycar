@@ -71,6 +71,9 @@ public class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.CarViewHolder>
                 if(key.equals(CarDiffCallback.KEY_NAME)){
                     holder.tvCarName.setText(mItems.get(position).getCarName());
                 }
+                if(key.equals(CarDiffCallback.KEY_QR_CODE)){
+                    holder.tvQrCode.setText(mItems.get(position).getQrCode());
+                }
             }
         }
     }
@@ -101,6 +104,8 @@ public class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.CarViewHolder>
     public class CarViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.tv_car_name)
         CustomFontTextView tvCarName;
+        @BindView(R.id.tv_qr_code)
+        CustomFontTextView tvQrCode;
         @BindView(R.id.tv_car_code)
         CustomFontTextView tvCarCode;
         @BindView(R.id.img_delete)
@@ -119,6 +124,7 @@ public class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.CarViewHolder>
         public void onBind(CarModel item) {
             tvCarCode.setText(item.getCarCode() + "");
             tvCarName.setText(item.getCarName());
+            tvQrCode.setText(item.getQrCode());
             imgDelete.setOnClickListener(v -> {
                 int positionChange = getAdapterPosition();
                 if(positionChange != -1) {

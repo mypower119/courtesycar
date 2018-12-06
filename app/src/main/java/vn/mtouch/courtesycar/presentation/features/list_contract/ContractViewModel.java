@@ -5,8 +5,10 @@ import android.arch.lifecycle.ViewModel;
 
 import java.util.List;
 
+import rx.Completable;
 import vn.mtouch.courtesycar.data.db.Repository;
 import vn.mtouch.courtesycar.data.db.model.BorrowContractModel;
+import vn.mtouch.courtesycar.data.db.model.CarModel;
 
 /**
  * Copyright (C) 2016, Mobitouch.
@@ -38,5 +40,13 @@ public class ContractViewModel extends ViewModel {
 
     public void deleteListContracts(long[] ids) {
 
+    }
+
+    public List<BorrowContractModel> findContactBorrowingByQrcode(String qrCode) {
+        return mRepository.findContactBorrowingByQrcode(qrCode);
+    }
+
+    public List<CarModel> findCarByQrCode(String qrCode) {
+        return mRepository.findCarByQrCode(qrCode);
     }
 }

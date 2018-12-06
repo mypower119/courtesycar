@@ -18,6 +18,12 @@ public class ConstantsPrefs {
     public static final String IMPORT_PATH = "com.evoteam.ecolauser.IMPORT_PATH";
     public static final String STORE_CODE = "com.evoteam.ecolauser.STORE_CODE";
 
+
+    public static final String FILTER_FROM_DATE_VALUE = "com.evoteam.ecolauser.FILTER_FROM_DATE";// long
+    public static final String FILTER_BY_DATE_FLAG = "com.evoteam.ecolauser.FILTER_BY_DATE";// 0 1
+    public static final String FILTER_TO_DATE_VALUE = "com.evoteam.ecolauser.FILTER_TO_DATE"; // long
+    public static final String FILTER_BY_STATUS = "com.evoteam.ecolauser.FILTER_BY_STATUS";// int
+
     public static String getStrHTML(Context context) {
         return "<html xmlns:v=\"urn:schemas-microsoft-com:vml\"\n" +
                 "xmlns:o=\"urn:schemas-microsoft-com:office:office\"\n" +

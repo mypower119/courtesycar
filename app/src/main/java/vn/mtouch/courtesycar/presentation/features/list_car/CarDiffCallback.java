@@ -18,6 +18,7 @@ import vn.mtouch.courtesycar.data.db.model.CarModel;
 public class CarDiffCallback extends DiffUtil.Callback {
     public static final String KEY_NAME = "name";
     public static final String KEY_CODE = "code";
+    public static final String KEY_QR_CODE = "qr_code";
     List<CarModel> mOldCars;
     List<CarModel> mNewCars;
 
@@ -59,6 +60,9 @@ public class CarDiffCallback extends DiffUtil.Callback {
         }
         if(!newCar.getCarCode().equals(oldCar.getCarCode())) {
             bundleDiff.putString(KEY_CODE, newCar.getCarCode());
+        }
+        if(!newCar.getQrCode().equals(oldCar.getQrCode())) {
+            bundleDiff.putString(KEY_QR_CODE, newCar.getQrCode());
         }
         if(bundleDiff.size() == 0) {
             return null;

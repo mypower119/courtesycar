@@ -22,4 +22,7 @@ public class CarDBO {
 
     @ColumnInfo(name = "code")
     public String carCode;
+
+    @ColumnInfo(name = "qr_code")
+    public String qrCode;
 }

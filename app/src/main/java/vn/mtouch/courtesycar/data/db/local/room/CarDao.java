@@ -23,6 +23,9 @@ public interface CarDao {
     @Query("Select * from car")
     LiveData<List<CarDBO>> getAllCars();
 
+    @Query("Select * from car where qr_code = :qrcode")
+    List<CarDBO> findCarByQrCode(String qrcode);
+
     @Insert
     long insertCar(CarDBO dbo);
 

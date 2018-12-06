@@ -56,6 +56,24 @@ public class Repository {
         });
     }
 
+    public List<CarModel> findCarByQrCode(String qrCode) {
+        List<CarDBO> cars = mRoomDataManager.findCarByQrCode(qrCode);
+        List<CarModel> ret = new ArrayList<>();
+        for(CarDBO itemBDO: cars) {
+            ret.add(Mappers.FROM_DBO_TO_CAR.map(itemBDO));
+        }
+        return ret;
+    }
+
+    public List<BorrowContractModel> findContactBorrowingByQrcode(String qrcode) {
+        List<BorrowContractDBO> contracts = mRoomDataManager.findContactBorrowingByQrcode(qrcode);
+        List<BorrowContractModel> ret = new ArrayList<>();
+        for(BorrowContractDBO itemBDO: contracts) {
+            ret.add(Mappers.FROM_DBO_TO_CONTRACT.map(itemBDO));
+        }
+        return ret;
+    }
+
     public LiveData<List<BorrowContractModel>> getContracts() {
         LiveData<List<BorrowContractDBO>> contracts = mRoomDataManager.getContracts();
         return Transformations.map(contracts, dboList -> {

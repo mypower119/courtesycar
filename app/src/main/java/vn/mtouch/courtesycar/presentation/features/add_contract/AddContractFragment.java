@@ -187,8 +187,7 @@ public class AddContractFragment extends Fragment {
             int positionSelect = -1;
             ArrayList<String> listStrAccount = new ArrayList<>();
             for(int i = 0; i < carModels.size(); i++) {
-                if((contractModel.getCarCode() + "").equals(carModels.get(i).getCarCode())
-                        && (contractModel.getCarName() + "").equals(carModels.get(i).getCarName()) ) {
+                if( (contractModel.getQrCode() + "").equals(carModels.get(i).getQrCode()) ) {
                     positionSelect = i;
                 }
                 listStrAccount.add(carModels.get(i).getCarName() + " " + carModels.get(i).getCarCode());
@@ -294,6 +293,7 @@ public class AddContractFragment extends Fragment {
                 spinner.setSelection(position);
                 contractModel.setCarCode(mCars.get(position).getCarCode());
                 contractModel.setCarName(mCars.get(position).getCarName());
+                contractModel.setQrCode(mCars.get(position).getQrCode());
             }
 
             @Override

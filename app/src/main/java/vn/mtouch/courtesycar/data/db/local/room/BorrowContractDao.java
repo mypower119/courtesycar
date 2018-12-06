@@ -37,4 +37,7 @@ public interface BorrowContractDao {
 
     @Query("Select * from borrow_contract where id = :id")
     BorrowContractDBO findContactById(long id);
+
+    @Query("Select * from borrow_contract where qr_code = :qrCode and state = :state")
+    List<BorrowContractDBO> findContactBorrowingByQrcode(String qrCode, int state);
 }

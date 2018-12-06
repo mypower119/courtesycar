@@ -31,6 +31,9 @@ public class BorrowContractDBO {
     @ColumnInfo(name = "car_code")
     public String carCode;
 
+    @ColumnInfo(name = "qr_code")
+    public String qrCode;
+
     @ColumnInfo(name = "time_in")
     public Long timeIn;
 

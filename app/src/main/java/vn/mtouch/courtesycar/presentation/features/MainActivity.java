@@ -15,6 +15,7 @@ import android.view.MenuItem;
 
 import vn.mtouch.courtesycar.R;
 import vn.mtouch.courtesycar.presentation.base_view.BaseActivity;
+import vn.mtouch.courtesycar.presentation.features.filter_contracts.FilterContractDialog;
 import vn.mtouch.courtesycar.presentation.features.list_car.ListCarFragment;
 import vn.mtouch.courtesycar.presentation.features.list_contract.ContractFragment;
 
@@ -49,10 +50,12 @@ public class MainActivity extends BaseActivity
         }
     }
 
+    Menu menu;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.main, this.menu);
         return true;
     }
 
@@ -64,7 +67,9 @@ public class MainActivity extends BaseActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_filter) {
+            FilterContractDialog filterContractDialog = FilterContractDialog.newInstance();
+            filterContractDialog.show(getSupportFragmentManager(), null);
             return true;
         }
 
@@ -79,8 +84,10 @@ public class MainActivity extends BaseActivity
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
+            this.menu.findItem(R.id.action_filter).setVisible(true);
             replaceFragment(R.id.fragment, ContractFragment.newInstance(1));
         } else if (id == R.id.nav_gallery) {
+            this.menu.findItem(R.id.action_filter).setVisible(false);
             replaceFragment(R.id.fragment, ListCarFragment.newInstance());
         }
 

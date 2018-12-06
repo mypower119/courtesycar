@@ -24,6 +24,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content" />
 
+    <vn.mtouch.courtesycar.presentation.custom_view.CustomFontTextView
+        style="@style/textViewStyle"
+        android:id="@+id/tv_qr_code"
+        android:layout_weight="1"
+        toolsText:text = "N1-01 678182"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" />
+
     <ImageView
         android:src="@drawable/ic_remove"
         android:id="@+id/img_delete"

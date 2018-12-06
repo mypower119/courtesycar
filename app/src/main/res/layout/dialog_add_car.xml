@@ -29,6 +29,18 @@
             android:layout_height="wrap_content" />
     </android.support.design.widget.TextInputLayout>
 
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <EditText
+            style="@style/editTextStyle"
+            android:hint="@string/qr_code"
+            android:id="@+id/edt_qr_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </android.support.design.widget.TextInputLayout>
+
     <Button
         style="@style/buttonStyle"
         android:id="@+id/btn_save"

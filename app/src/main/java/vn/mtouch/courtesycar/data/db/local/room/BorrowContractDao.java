@@ -20,8 +20,14 @@ import vn.mtouch.courtesycar.data.db.model.roomdb.BorrowContractDBO;
 
 @Dao
 public interface BorrowContractDao {
-    @Query("Select * from borrow_contract")
-    LiveData<List<BorrowContractDBO>> getAllContract();
+    @Query("Select * " +
+            "from borrow_contract " +
+            "where " +
+            "(phone_number like :query or full_name like :query or :query = '' or :query = null) " +
+            "and (state = :stateQuery or :stateQuery = 0 ) " +
+            "and (:isReportDateFromDateTo = 0 or (:isReportDateFromDateTo = 1 and time_in >= :timeIn and time_in <= :timeOut) )" +
+            "")
+    LiveData<List<BorrowContractDBO>> getAllContract(String query, int stateQuery, int isReportDateFromDateTo, long timeIn, long timeOut);
 
     @Insert
     long insertBorrowContract(BorrowContractDBO dbo);

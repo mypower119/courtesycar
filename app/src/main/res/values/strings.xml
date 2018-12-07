@@ -16,6 +16,7 @@
     <string name="time_in">Time in</string>
     <string name="time_out">Time out</string>
     <string name="courtesy_car">Courtesy car</string>
+    <string name="car_info">Car</string>
     <string name="license_type">License type</string>
     <string name="date_of_birth">Date of birth</string>
     <string name="phone_number">Phone number</string>
@@ -37,5 +38,12 @@
     <string name="borrowing">Borrowing</string>
     <string name="returned">Returned</string>
     <string name="scanning_barcode"> --------- Scanning ---------</string>
+    <string name="notification">Notification</string>
+    <string name="close">Close</string>
+    <string name="do_you_want_to_delete_it">Do you want to delete it ?</string>
+    <string name="front_license">Front license</string>
+    <string name="back_license">Back license</string>
+    <string name="in_progress">in progress</string>
+    <string name="customer_name_phone">Customer name, phone number</string>
 
 </resources>

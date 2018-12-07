@@ -32,11 +32,11 @@ public class Mappers {
         BorrowContractModel contract = new BorrowContractModel();
 
         if (dbo != null) {
-            contract = new BorrowContractModel(dbo.id,
-                    dbo.carName, dbo.carCode,
-                    dbo.timeIn, dbo.timeOut,
-                    dbo.fullName, dbo.dateOfBirth,
-                    dbo.phoneNumber, dbo.state, dbo.licenseType, dbo.qrCode);
+            contract = new BorrowContractModel(
+                    dbo.id, dbo.carName, dbo.carCode,
+                    dbo.timeIn, dbo.timeOut, dbo.fullName, dbo.dateOfBirth,
+                    dbo.phoneNumber, dbo.state, dbo.licenseType,
+                    dbo.qrCode, dbo.pathFrontLicense, dbo.pathBackLicense);
         }
         return contract;
     };

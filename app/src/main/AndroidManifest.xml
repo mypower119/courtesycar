@@ -3,6 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="vn.mtouch.courtesycar">
 
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:required="false" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:required="false" />
+
     <application
         android:name=".CourtesyCarApp"
         android:allowBackup="true"

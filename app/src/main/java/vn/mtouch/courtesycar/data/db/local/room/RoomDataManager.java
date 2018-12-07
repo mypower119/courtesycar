@@ -4,19 +4,25 @@ import android.arch.lifecycle.LiveData;
 import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
+import android.arch.persistence.room.migration.Migration;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import java.util.Calendar;
 import java.util.List;
 
 import rx.Completable;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
+import vn.mtouch.courtesycar.CourtesyCarApp;
 import vn.mtouch.courtesycar.data.db.Repository;
 import vn.mtouch.courtesycar.data.db.model.BorrowContractModel;
 import vn.mtouch.courtesycar.data.db.model.CarModel;
 import vn.mtouch.courtesycar.data.db.model.roomdb.BorrowContractDBO;
 import vn.mtouch.courtesycar.data.db.model.roomdb.CarDBO;
+import vn.mtouch.courtesycar.data.prefs.ConstantsPrefs;
+import vn.mtouch.courtesycar.data.prefs.SharePreferenceManager;
+import vn.mtouch.courtesycar.utils.ConvertUtil;
 import vn.mtouch.courtesycar.utils.SimpleCompletableSubscriber;
 
 /**
@@ -53,6 +59,30 @@ public class RoomDataManager {
         return instance;
     }
 
+    private static final Migration mUserDBMigration_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            //database.execSQL("CREATE TABLE friend_requests(id INTEGER PRIMARY KEY AUTOINCREMENT, total_friend_requests INTEGER)");
+            database.execSQL("ALTER TABLE borrow_contract ADD COLUMN path_front_license TEXT");
+            database.execSQL("ALTER TABLE borrow_contract ADD COLUMN path_back_license TEXT");
+        }
+    };
+
+    private static final RoomDatabase.Callback mUserDBCallback = new RoomDatabase.Callback() {
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+//            db.execSQL("CREATE INDEX index_conversation_friend_id ON chat_rooms (friend_id)");
+//            db.execSQL("CREATE INDEX index_message_id ON messages (message_id)");
+//            db.execSQL("CREATE INDEX index_message_receiver_id ON messages (receiver_id)");
+//            db.execSQL("CREATE INDEX index_message_sender_id ON messages (sender_id)");
+//            db.execSQL("CREATE INDEX index_user_profile_id ON chat_profiles (user_id)");
+//            db.execSQL("CREATE INDEX index_block_user_profile_id ON block_profiles (profile_id)");
+//            db.execSQL("CREATE TRIGGER update_room_on_insert_message AFTER INSERT ON messages WHEN new.unread = 1 BEGIN UPDATE chat_rooms SET unread_count = unread_count + 1 WHERE room_id = new.room_id; END");
+//            db.execSQL("CREATE TRIGGER update_unread_count_on_update_message AFTER UPDATE OF unread ON messages WHEN new.unread = 0 BEGIN UPDATE chat_rooms SET unread_count = unread_count - 1 WHERE room_id = new.room_id; END");
+//            db.execSQL("CREATE TRIGGER update_message_count_on_insert_message AFTER INSERT ON messages BEGIN UPDATE chat_rooms SET message_count = message_count + 1 WHERE room_id = new.room_id; END");
+        }
+    };
+
     public synchronized void initForUser(Context context) {
         if (mCourtesyCarDatabase == null) {
             mCourtesyCarDatabase = Room.databaseBuilder(context, CourtesyCarDatabase.class, "courtesy_car_db")
@@ -75,8 +105,8 @@ public class RoomDataManager {
                     super.onOpen(db);
                 }
             })
-//                    .addMigrations(mUserDBMigration_1_2)
-//                    .addCallback(mUserDBCallback)
+                    .addMigrations(mUserDBMigration_1_2)
+                    .addCallback(mUserDBCallback)
                     .build();
 
             mBorrowContractDao = mCourtesyCarDatabase.getBorrowContractDao();
@@ -99,9 +129,13 @@ public class RoomDataManager {
         return mBorrowContractDao.findContactBorrowingByQrcode(qrCode, BorrowContractModel.STATE_NEW_BORROW);
     }
 
-    public LiveData<List<BorrowContractDBO>> getContracts() {
+    public LiveData<List<BorrowContractDBO>> getContracts(String query) {
         // can transfer here
-        return mBorrowContractDao.getAllContract();
+        int state = SharePreferenceManager.getInt(CourtesyCarApp.getAppContext(), ConstantsPrefs.FILTER_BY_STATUS, BorrowContractModel.ALL_STATE);
+        int isReportByDate = SharePreferenceManager.getBool(CourtesyCarApp.getAppContext(), ConstantsPrefs.FILTER_BY_DATE_FLAG, false) ? 1 : 0;
+        long dateTo = SharePreferenceManager.getLong(CourtesyCarApp.getAppContext(), ConstantsPrefs.FILTER_TO_DATE_VALUE, ConvertUtil.setMaximumCalendar(Calendar.getInstance()).getTimeInMillis());
+        long dateFrom = SharePreferenceManager.getLong(CourtesyCarApp.getAppContext(), ConstantsPrefs.FILTER_FROM_DATE_VALUE, ConvertUtil.setMinimumCalendar(Calendar.getInstance()).getTimeInMillis());
+        return mBorrowContractDao.getAllContract(query, state, isReportByDate, dateFrom, dateTo);
     }
 
     public Completable asyncSaveCar(final CarModel carModel) {
@@ -132,6 +166,8 @@ public class RoomDataManager {
             contractDBO.phoneNumber = contract.getPhoneNumber();
             contractDBO.state = contract.getState();
             contractDBO.licenseType = contract.getLicenseType();
+            contractDBO.pathBackLicense = contract.getPathBackLicense();
+            contractDBO.pathFrontLicense = contract.getPathFrontLicense();
             mBorrowContractDao.insertBorrowContract(contractDBO);
         });
     }
@@ -154,6 +190,8 @@ public class RoomDataManager {
             contractDBO.phoneNumber = contract.getPhoneNumber();
             contractDBO.state = contract.getState();
             contractDBO.licenseType = contract.getLicenseType();
+            contractDBO.pathBackLicense = contract.getPathBackLicense();
+            contractDBO.pathFrontLicense = contract.getPathFrontLicense();
             mBorrowContractDao.updateBorrowContract(contractDBO);
         });
     }

@@ -6,8 +6,8 @@ android {
         applicationId "vn.mtouch.courtesycar"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 2
-        versionName "2.0"
+        versionCode 3
+        versionName "3.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -57,4 +57,7 @@ dependencies {
     //Zxing
     implementation('com.journeyapps:zxing-android-embedded:3.6.0') { transitive = false }
     implementation 'com.google.zxing:core:3.3.0'
+
+    //event bus
+    implementation 'org.greenrobot:eventbus:3.1.1'
 }

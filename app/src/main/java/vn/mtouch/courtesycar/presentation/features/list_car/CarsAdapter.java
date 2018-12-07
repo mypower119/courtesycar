@@ -1,6 +1,7 @@
 package vn.mtouch.courtesycar.presentation.features.list_car;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.util.DiffUtil;
@@ -17,6 +18,7 @@ import butterknife.ButterKnife;
 import vn.mtouch.courtesycar.R;
 import vn.mtouch.courtesycar.data.db.model.CarModel;
 import vn.mtouch.courtesycar.presentation.custom_view.CustomFontTextView;
+import vn.mtouch.courtesycar.utils.DialogUtils;
 import vn.mtouch.courtesycar.utils.LogManager;
 
 /**
@@ -128,7 +130,12 @@ public class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.CarViewHolder>
             imgDelete.setOnClickListener(v -> {
                 int positionChange = getAdapterPosition();
                 if(positionChange != -1) {
-                    mViewModel.asyncDeleteCar(mItems.get(positionChange).getId());
+                    DialogUtils.showDialogConfirm(mContext, null, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            mViewModel.asyncDeleteCar(mItems.get(positionChange).getId());
+                        }
+                    },null);
                 }
             });
         }

@@ -1,6 +1,8 @@
 package vn.mtouch.courtesycar.presentation.features.list_contract;
 
+import android.app.SearchManager;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,6 +12,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +42,10 @@ import static android.app.Activity.RESULT_OK;
 public class ContractFragment extends Fragment {
     @BindView(R.id.list)
     RecyclerView rvContracts;
-    @BindView(R.id.fab_add_contract)
-    FloatingActionButton fabAddContracts;
+    @BindView(R.id.imgScanCode)
+    View fabAddContracts;
+    @BindView(R.id.sv_search_order)
+    SearchView searchView;
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -83,7 +88,7 @@ public class ContractFragment extends Fragment {
 
         mUnbinder = ButterKnife.bind(this, view);
         mViewModel = ViewModelProviders.of(this).get(ContractViewModel.class);
-        mViewModel.init();
+
         setupUi();
         setupEvent();
         return view;
@@ -102,6 +107,15 @@ public class ContractFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rvContracts.getContext(),
                 linearLayoutManager.getOrientation());
         rvContracts.addItemDecoration(dividerItemDecoration);
+        initObserve("");
+        setupSearchView();
+    }
+
+    public void initObserve(String query) {
+        if(mViewModel.getContracts() != null && mViewModel.getContracts().hasObservers()) {
+            mViewModel.getContracts().removeObservers(this);
+        }
+        mViewModel.init(query);
         mViewModel.getContracts().observe(this, items -> {
             mAdapter.setItems(items);
         });
@@ -148,7 +162,7 @@ public class ContractFragment extends Fragment {
                         if(lst.size() > 0) {
                             // nếu tìm được thì show
                             AndroidUtilities.getsUIHandler().post(() -> {
-                                startActivity(TransferActivity.getCallingIntent(getActivity(), null));
+                                startActivity(TransferActivity.getCallingIntent(getActivity(), lst.get(0), false));
                             });
                         } else {
                             // nếu không có thì tạo 1 cái object bỏ vào startActivity
@@ -162,7 +176,7 @@ public class ContractFragment extends Fragment {
                                 borrowContractModel.setState(BorrowContractModel.STATE_NEW_BORROW);
 
                                 AndroidUtilities.getsUIHandler().post(() -> {
-                                    startActivity(TransferActivity.getCallingIntent(getActivity(), borrowContractModel));
+                                    startActivity(TransferActivity.getCallingIntent(getActivity(), borrowContractModel, true));
                                     Toast.makeText(CourtesyCarApp.getAppContext(), "", Toast.LENGTH_LONG).show();
                                 });
                             } else {
@@ -174,6 +188,42 @@ public class ContractFragment extends Fragment {
                     }
                 }).start();
             }
+        }
+    }
+
+    private void setupSearchView() {
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getActivity().getComponentName()));
+        searchView.setIconified(false);
+        searchView.setFocusable(false);
+        searchView.clearFocus();
+        // listening to search query text change
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // filter recycler view when query submitted
+                onFilterQuery(query);
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // filter recycler view when text is changed
+                onFilterQuery(query);
+                return false;
+            }
+        });
+    }
+
+    public void onFilterQuery(String query) {
+        try {
+            initObserve(query);
+            ((LinearLayoutManager) rvContracts.getLayoutManager()).scrollToPositionWithOffset(0, 0);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

@@ -55,4 +55,10 @@ public class BorrowContractDBO {
     @ColumnInfo(name = "license_type")
     public String licenseType;
 
+    @ColumnInfo(name = "path_front_license")
+    public String pathFrontLicense;
+
+    @ColumnInfo(name = "path_back_license")
+    public String pathBackLicense;
+
 }

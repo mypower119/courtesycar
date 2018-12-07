@@ -18,6 +18,8 @@ import android.widget.TimePicker;
 
 import java.util.Calendar;
 
+import vn.mtouch.courtesycar.R;
+
 /**
  * Copyright (C) 2017, VNG Corporation.
  *
@@ -137,10 +139,12 @@ public final class DialogUtils {
                                            String message,
                                            final DialogInterface.OnClickListener onPositiveClick,
                                            final DialogInterface.OnClickListener onNegativeClick) {
-        String title = "Thông báo";
-        String positiveButtonText = "Ok";
-        String negativeButtonText = "Đóng";
-
+        String title = context.getResources().getString(R.string.notification);
+        String positiveButtonText = context.getResources().getString(R.string.ok);
+        String negativeButtonText = context.getResources().getString(R.string.close);
+        if(TextUtils.isEmpty(message)) {
+            message = context.getResources().getString(R.string.do_you_want_to_delete_it);
+        }
         return showDialogConfirm(context, title, message, positiveButtonText, negativeButtonText, onPositiveClick, onNegativeClick);
     }
 

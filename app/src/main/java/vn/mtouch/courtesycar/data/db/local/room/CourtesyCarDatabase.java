@@ -17,7 +17,7 @@ import vn.mtouch.courtesycar.data.db.model.roomdb.CarDBO;
  * @since 11/29/18
  */
 
-@Database(entities = {BorrowContractDBO.class, CarDBO.class}, version = 1)
+@Database(entities = {BorrowContractDBO.class, CarDBO.class}, version = 2)
 public abstract class CourtesyCarDatabase extends RoomDatabase {
 
     public abstract BorrowContractDao getBorrowContractDao();

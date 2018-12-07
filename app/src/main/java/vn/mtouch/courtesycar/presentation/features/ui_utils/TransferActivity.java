@@ -17,10 +17,12 @@ import vn.mtouch.courtesycar.presentation.features.list_contract.ContractFragmen
 public class TransferActivity extends BaseActivity {
     private Unbinder mUnbinder;
     private static final String EXTRA_OBJECT = "EXTRA_OBJECT";
+    private static final String EXTRA_IS_CREATE = "EXTRA_IS_CREATE";
 
-    public static Intent getCallingIntent(Context context, BorrowContractModel contractModel) {
+    public static Intent getCallingIntent(Context context, BorrowContractModel contractModel, boolean isCreate) {
         Intent intent = new Intent(context, TransferActivity.class);
         intent.putExtra(EXTRA_OBJECT, new Gson().toJson(contractModel) + "");
+        intent.putExtra(EXTRA_IS_CREATE, isCreate);
         return intent;
     }
 
@@ -29,8 +31,8 @@ public class TransferActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transfer);
         mUnbinder = ButterKnife.bind(this);
-
-        replaceFragment(R.id.fragment, AddContractFragment.newInstance(getIntent().getStringExtra(EXTRA_OBJECT)));
+        boolean isCreate =  getIntent().getBooleanExtra(EXTRA_IS_CREATE, false);
+        replaceFragment(R.id.fragment, AddContractFragment.newInstance(getIntent().getStringExtra(EXTRA_OBJECT), isCreate));
     }
 
     @Override

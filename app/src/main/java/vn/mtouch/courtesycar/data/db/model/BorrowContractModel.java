@@ -8,8 +8,11 @@ package vn.mtouch.courtesycar.data.db.model;
  */
 
 public class BorrowContractModel {
-    public static final int STATE_NEW_BORROW = 0;
-    public static final int STATE_RETURNED = STATE_NEW_BORROW + 1;
+
+    public static final int ALL_STATE = 0;
+    public static final int STATE_NEW_BORROW = ALL_STATE + 1;
+    public static final int STATE_RETURNED = ALL_STATE + 2;
+
 
     private long id;
     private String carName;
@@ -22,6 +25,8 @@ public class BorrowContractModel {
     private String phoneNumber;
     private Integer state = STATE_NEW_BORROW;
     private String licenseType;
+    private String pathFrontLicense;
+    private String pathBackLicense;
 
     public BorrowContractModel() {
 
@@ -30,7 +35,7 @@ public class BorrowContractModel {
     public BorrowContractModel(long id, String carName, String carCode,
                                Long timeIn, Long timeOut, String fullName,
                                String dateOfBirth, String phoneNumber, Integer state,
-                               String licenseType, String qrCode) {
+                               String licenseType, String qrCode, String pathFront, String pathBack) {
         this.id = id;
         this.carName = carName;
         this.carCode = carCode;
@@ -42,6 +47,24 @@ public class BorrowContractModel {
         this.state = state;
         this.licenseType = licenseType;
         this.qrCode = qrCode;
+        this.pathFrontLicense = pathFront;
+        this.pathBackLicense = pathBack;
+    }
+
+    public String getPathFrontLicense() {
+        return pathFrontLicense;
+    }
+
+    public void setPathFrontLicense(String pathFrontLicense) {
+        this.pathFrontLicense = pathFrontLicense;
+    }
+
+    public String getPathBackLicense() {
+        return pathBackLicense;
+    }
+
+    public void setPathBackLicense(String pathBackLicense) {
+        this.pathBackLicense = pathBackLicense;
     }
 
     public String getQrCode() {

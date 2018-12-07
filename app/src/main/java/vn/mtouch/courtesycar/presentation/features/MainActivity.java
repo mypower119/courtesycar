@@ -3,6 +3,7 @@ package vn.mtouch.courtesycar.presentation.features;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,6 +19,7 @@ import vn.mtouch.courtesycar.presentation.base_view.BaseActivity;
 import vn.mtouch.courtesycar.presentation.features.filter_contracts.FilterContractDialog;
 import vn.mtouch.courtesycar.presentation.features.list_car.ListCarFragment;
 import vn.mtouch.courtesycar.presentation.features.list_contract.ContractFragment;
+import vn.mtouch.courtesycar.utils.ImageUtils;
 
 public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -38,6 +40,8 @@ public class MainActivity extends BaseActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         replaceFragment(R.id.fragment, ContractFragment.newInstance(1));
+
+        ImageUtils.askStoragePermission(this);
     }
 
     @Override
@@ -69,6 +73,12 @@ public class MainActivity extends BaseActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_filter) {
             FilterContractDialog filterContractDialog = FilterContractDialog.newInstance();
+            filterContractDialog.setListener(() -> {
+                Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment);
+                if(fragment instanceof ContractFragment) {
+                    ((ContractFragment)fragment).initObserve("");
+                }
+            });
             filterContractDialog.show(getSupportFragmentManager(), null);
             return true;
         }

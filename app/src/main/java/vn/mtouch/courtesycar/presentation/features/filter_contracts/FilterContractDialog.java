@@ -21,6 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import vn.mtouch.courtesycar.CourtesyCarApp;
 import vn.mtouch.courtesycar.R;
+import vn.mtouch.courtesycar.data.db.model.BorrowContractModel;
 import vn.mtouch.courtesycar.data.prefs.ConstantsPrefs;
 import vn.mtouch.courtesycar.data.prefs.SharePreferenceManager;
 import vn.mtouch.courtesycar.presentation.base_view.BaseDialog;
@@ -85,8 +86,18 @@ public class FilterContractDialog extends BaseDialog {
         tvToDate.setText(dateFormat.format(new Date(toTime)));
         tvFromDate.setText(dateFormat.format(new Date(fromTime)));
         spnStatus.setAdapter(getListStatus());
-        filterByStatusPostion = SharePreferenceManager.getInt(CourtesyCarApp.getAppContext(), ConstantsPrefs.FILTER_BY_STATUS, 0);
+        filterByStatusPostion = SharePreferenceManager.getInt(CourtesyCarApp.getAppContext(), ConstantsPrefs.FILTER_BY_STATUS, BorrowContractModel.ALL_STATE);
         spnStatus.setSelection(filterByStatusPostion);
+    }
+
+    public interface OnFilterDialogListener {
+        void onClickDone();
+    }
+
+    OnFilterDialogListener listener;
+
+    public void setListener(OnFilterDialogListener listener) {
+        this.listener = listener;
     }
 
     private void setUpEvent() {
@@ -95,6 +106,9 @@ public class FilterContractDialog extends BaseDialog {
             SharePreferenceManager.putLong(CourtesyCarApp.getAppContext(), ConstantsPrefs.FILTER_TO_DATE_VALUE, toTime);
             SharePreferenceManager.putBool(CourtesyCarApp.getAppContext(), ConstantsPrefs.FILTER_BY_DATE_FLAG, isFilterByDate);
             SharePreferenceManager.putInt(CourtesyCarApp.getAppContext(), ConstantsPrefs.FILTER_BY_STATUS, filterByStatusPostion);
+            if(listener != null) {
+                listener.onClickDone();
+            }
             dismiss();
         });
 

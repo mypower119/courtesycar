@@ -21,10 +21,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="@string/courtesy_car"
+                android:text="@string/car_info"
                 android:textSize="@dimen/text_size" />
 
+            <vn.mtouch.courtesycar.presentation.custom_view.CustomFontTextView
+                style="@style/textViewStyle"
+                android:gravity="center"
+                android:id="@+id/tvCarInfo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
             <RelativeLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
@@ -162,6 +169,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/phone_number" />
         </android.support.design.widget.TextInputLayout>
+
+        <include layout="@layout/context_capture_license"/>
 
         <WebView
             android:layout_marginTop="8dp"

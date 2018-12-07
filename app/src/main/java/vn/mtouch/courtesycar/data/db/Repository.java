@@ -74,8 +74,8 @@ public class Repository {
         return ret;
     }
 
-    public LiveData<List<BorrowContractModel>> getContracts() {
-        LiveData<List<BorrowContractDBO>> contracts = mRoomDataManager.getContracts();
+    public LiveData<List<BorrowContractModel>> getContracts(String query) {
+        LiveData<List<BorrowContractDBO>> contracts = mRoomDataManager.getContracts(query);
         return Transformations.map(contracts, dboList -> {
             List<BorrowContractModel> ret = new ArrayList<>();
             for(BorrowContractDBO itemBDO: dboList) {

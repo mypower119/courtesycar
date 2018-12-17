@@ -23,6 +23,7 @@ import vn.mtouch.courtesycar.data.db.model.roomdb.CarDBO;
 import vn.mtouch.courtesycar.data.prefs.ConstantsPrefs;
 import vn.mtouch.courtesycar.data.prefs.SharePreferenceManager;
 import vn.mtouch.courtesycar.utils.ConvertUtil;
+import vn.mtouch.courtesycar.utils.ImageUtils;
 import vn.mtouch.courtesycar.utils.SimpleCompletableSubscriber;
 
 /**
@@ -65,6 +66,8 @@ public class RoomDataManager {
             //database.execSQL("CREATE TABLE friend_requests(id INTEGER PRIMARY KEY AUTOINCREMENT, total_friend_requests INTEGER)");
             database.execSQL("ALTER TABLE borrow_contract ADD COLUMN path_front_license TEXT");
             database.execSQL("ALTER TABLE borrow_contract ADD COLUMN path_back_license TEXT");
+            database.execSQL("ALTER TABLE borrow_contract ADD COLUMN path_signature TEXT");
+            database.execSQL("ALTER TABLE borrow_contract ADD COLUMN address TEXT");
         }
     };
 
@@ -144,6 +147,7 @@ public class RoomDataManager {
             carDBO.carName = carModel.getCarName();
             carDBO.carCode = carModel.getCarCode();
             carDBO.qrCode = carModel.getQrCode();
+            carDBO.status = carModel.getStatus();
             mCarDao.insertCar(carDBO);
         });
     }
@@ -151,10 +155,19 @@ public class RoomDataManager {
     public Completable asyncSaveContract(final BorrowContractModel contract) {
         return Completable.fromAction(() -> {
             BorrowContractDBO contractDBO = new BorrowContractDBO();
+            CarDBO carDBO = mCarDao.findCarByCarCodeAndName(contract.getCarCode(), contract.getCarName());
             if(contract.getTimeOut() != null) {
                 contract.setState(BorrowContractModel.STATE_RETURNED);
+                if(carDBO != null) {
+                    carDBO.status = CarModel.STATUS_NOT_BORROW;
+                    mCarDao.updateCar(carDBO);
+                }
             } else {
                 contract.setState(BorrowContractModel.STATE_NEW_BORROW);
+                if(carDBO != null) {
+                    carDBO.status = CarModel.STATUS_BORROWING;
+                    mCarDao.updateCar(carDBO);
+                }
             }
             contractDBO.carName = contract.getCarName();
             contractDBO.carCode = contract.getCarCode();
@@ -164,10 +177,12 @@ public class RoomDataManager {
             contractDBO.fullName = contract.getFullName();
             contractDBO.dateOfBirth = contract.getDateOfBirth();
             contractDBO.phoneNumber = contract.getPhoneNumber();
+            contractDBO.address = contract.getAddress();
             contractDBO.state = contract.getState();
             contractDBO.licenseType = contract.getLicenseType();
             contractDBO.pathBackLicense = contract.getPathBackLicense();
             contractDBO.pathFrontLicense = contract.getPathFrontLicense();
+            contractDBO.pathSignature = contract.getPathSignature();
             mBorrowContractDao.insertBorrowContract(contractDBO);
         });
     }
@@ -175,10 +190,19 @@ public class RoomDataManager {
     public Completable asyncUpdateContract(final BorrowContractModel contract) {
         return Completable.fromAction(() -> {
             BorrowContractDBO contractDBO = mBorrowContractDao.findContactById(contract.getId());
+            CarDBO carDBO = mCarDao.findCarByCarCodeAndName(contract.getCarCode(), contract.getCarName());
             if(contract.getTimeOut() != null) {
                 contract.setState(BorrowContractModel.STATE_RETURNED);
+                if(carDBO != null) {
+                    carDBO.status = CarModel.STATUS_NOT_BORROW;
+                    mCarDao.updateCar(carDBO);
+                }
             } else {
                 contract.setState(BorrowContractModel.STATE_NEW_BORROW);
+                if(carDBO != null) {
+                    carDBO.status = CarModel.STATUS_BORROWING;
+                    mCarDao.updateCar(carDBO);
+                }
             }
             contractDBO.carName = contract.getCarName();
             contractDBO.carCode = contract.getCarCode();
@@ -188,10 +212,12 @@ public class RoomDataManager {
             contractDBO.fullName = contract.getFullName();
             contractDBO.dateOfBirth = contract.getDateOfBirth();
             contractDBO.phoneNumber = contract.getPhoneNumber();
+            contractDBO.address = contract.getAddress();
             contractDBO.state = contract.getState();
             contractDBO.licenseType = contract.getLicenseType();
             contractDBO.pathBackLicense = contract.getPathBackLicense();
             contractDBO.pathFrontLicense = contract.getPathFrontLicense();
+            contractDBO.pathSignature = contract.getPathSignature();
             mBorrowContractDao.updateBorrowContract(contractDBO);
         });
     }
@@ -202,6 +228,7 @@ public class RoomDataManager {
             carDBO.carName = carModel.getCarName();
             carDBO.qrCode = carModel.getQrCode();
             carDBO.carCode = carModel.getCarCode();
+            carDBO.status = carModel.getStatus();
             mCarDao.updateCar(carDBO);
         });
     }
@@ -221,7 +248,12 @@ public class RoomDataManager {
             @Override
             public void call() {
                 BorrowContractDBO carDBO = mBorrowContractDao.findContactById(id);
-                mBorrowContractDao.deleteBorrowContract(carDBO);
+                if(carDBO != null) {
+                    ImageUtils.deleteImage(carDBO.pathBackLicense);
+                    ImageUtils.deleteImage(carDBO.pathFrontLicense);
+                    ImageUtils.deleteImage(carDBO.pathSignature);
+                    mBorrowContractDao.deleteBorrowContract(carDBO);
+                }
             }
         });
     }

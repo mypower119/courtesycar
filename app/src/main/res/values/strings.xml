@@ -45,5 +45,7 @@
     <string name="back_license">Back license</string>
     <string name="in_progress">in progress</string>
     <string name="customer_name_phone">Customer name, phone number</string>
+    <string name="signature">Signature</string>
+    <string name="address">Address</string>
 
 </resources>

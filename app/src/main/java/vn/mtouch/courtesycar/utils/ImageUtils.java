@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Base64;
 import android.widget.ImageView;
 
@@ -79,6 +80,25 @@ public class ImageUtils {
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public static boolean deleteImage(String fileName) {
+        if(TextUtils.isEmpty(fileName)) {
+            return false;
+        }
+        String filePath = returnLicenseFilePath() + "/" + fileName;
+        boolean isDelete = false;
+        try {
+            File file = new File(filePath);
+            if(file.exists()) {
+                file.delete();
+                isDelete = true;
+            }
+        } catch (Exception e) {
+
+        } finally {
+            return isDelete;
         }
     }
 

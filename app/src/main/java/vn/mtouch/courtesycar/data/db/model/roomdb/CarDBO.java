@@ -25,4 +25,7 @@ public class CarDBO {
 
     @ColumnInfo(name = "qr_code")
     public String qrCode;
+
+    @ColumnInfo(name = "status")
+    public Integer status;
 }

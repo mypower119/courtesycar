@@ -76,6 +76,13 @@ public class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.CarViewHolder>
                 if(key.equals(CarDiffCallback.KEY_QR_CODE)){
                     holder.tvQrCode.setText(mItems.get(position).getQrCode());
                 }
+                if(key.equals(CarDiffCallback.KEY_STATUS)){
+                    if(mItems.get(position).getStatus() != CarModel.STATUS_BORROWING) {
+                        holder.itemView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+                    } else {
+                        holder.itemView.setBackgroundColor(mContext.getResources().getColor(R.color.colorBorrowing));
+                    }
+                }
             }
         }
     }
@@ -127,6 +134,11 @@ public class CarsAdapter extends RecyclerView.Adapter<CarsAdapter.CarViewHolder>
             tvCarCode.setText(item.getCarCode() + "");
             tvCarName.setText(item.getCarName());
             tvQrCode.setText(item.getQrCode());
+            if(item.getStatus() != CarModel.STATUS_BORROWING) {
+                itemView.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+            } else {
+                itemView.setBackgroundColor(mContext.getResources().getColor(R.color.colorBorrowing));
+            }
             imgDelete.setOnClickListener(v -> {
                 int positionChange = getAdapterPosition();
                 if(positionChange != -1) {

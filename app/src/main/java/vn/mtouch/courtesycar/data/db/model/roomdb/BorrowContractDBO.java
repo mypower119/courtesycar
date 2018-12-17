@@ -61,4 +61,10 @@ public class BorrowContractDBO {
     @ColumnInfo(name = "path_back_license")
     public String pathBackLicense;
 
+    @ColumnInfo(name = "path_signature")
+    public String pathSignature;
+
+    @ColumnInfo(name = "address")
+    public String address;
+
 }

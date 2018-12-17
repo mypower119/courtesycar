@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,9 +28,6 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 
-import java.io.BufferedInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,6 +44,7 @@ import vn.mtouch.courtesycar.data.db.model.CarModel;
 import vn.mtouch.courtesycar.data.db.model.LicenseModel;
 import vn.mtouch.courtesycar.data.prefs.ConstantsPrefs;
 import vn.mtouch.courtesycar.presentation.custom_view.CustomFontTextView;
+import vn.mtouch.courtesycar.presentation.features.signature.SignatureActivity;
 import vn.mtouch.courtesycar.utils.ConvertUtil;
 import vn.mtouch.courtesycar.utils.DialogUtils;
 import vn.mtouch.courtesycar.utils.ImageUtils;
@@ -64,6 +61,8 @@ public class AddContractFragment extends Fragment {
     EditText edtDateOfBirth;
     @BindView(R.id.edt_phone_number)
     EditText edtPhoneNumber;
+    @BindView(R.id.edt_address)
+    EditText edtAddress;
     @BindView(R.id.cb_agree)
     CheckBox cbAgree;
     @BindView(R.id.btn_save)
@@ -87,6 +86,8 @@ public class AddContractFragment extends Fragment {
     ImageView imgFrontLicenseDiploma;
     @BindView(R.id.back_license_diploma)
     ImageView imgBackLicenseDiploma;
+    @BindView(R.id.img_signature)
+    ImageView imgSignature;
 
     private static final String EXTRA_CONTRACT = "EXTRA_CONTRACT";
     private static final String EXTRA_IS_CREATE = "EXTRA_IS_CREATE";
@@ -160,12 +161,14 @@ public class AddContractFragment extends Fragment {
             edtFullName.setText(ConvertUtil.convertObjectToString(contractModel.getFullName()));
             edtDateOfBirth.setText(ConvertUtil.convertObjectToString(contractModel.getDateOfBirth()));
             edtPhoneNumber.setText(ConvertUtil.convertObjectToString(contractModel.getPhoneNumber()));
+            edtAddress.setText(ConvertUtil.convertObjectToString(contractModel.getAddress()));
             new AsyncTask<Void, Void, List<Bitmap>>() {
                 @Override
                 protected List<Bitmap> doInBackground(Void... voids) {
                     ArrayList<Bitmap> bitmaps = new ArrayList<>();
                     bitmaps.add(ImageUtils.getBitmap(contractModel.getPathBackLicense()));
                     bitmaps.add(ImageUtils.getBitmap(contractModel.getPathFrontLicense()));
+                    bitmaps.add(ImageUtils.getBitmap(contractModel.getPathSignature()));
                     return bitmaps;
                 }
 
@@ -175,6 +178,7 @@ public class AddContractFragment extends Fragment {
                     if(bitmaps.size() >= 2) {
                         imgBackLicenseDiploma.setImageBitmap(bitmaps.get(0));
                         imgFrontLicenseDiploma.setImageBitmap(bitmaps.get(1));
+                        imgSignature.setImageBitmap(bitmaps.get(2));
                     }
                 }
             }.execute();
@@ -271,6 +275,7 @@ public class AddContractFragment extends Fragment {
             showErrorToast("must to agree contract");
             return false;
         }
+
         return true;
     }
 
@@ -287,16 +292,24 @@ public class AddContractFragment extends Fragment {
                 return;
             }
             try {
-                InputStream inputStream = getActivity().getContentResolver().openInputStream(data.getData());
-                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
-                Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
+//                InputStream inputStream = getActivity().getContentResolver().openInputStream(data.getData());
+//                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+//                Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
+                if(requestCode == SIGNATURE) {
+                    String imageName = data.getStringExtra("imageName");
+                    imgSignature.setImageBitmap(ImageUtils.getBitmap(imageName));
+                    contractModel.setPathSignature(imageName);
+                } else {
+                    Bitmap bmp = (Bitmap) data.getExtras().get("data");
+                    //bmp = Bitmap.createScaledBitmap(bmp, 80, 80, false);
 
-                if (requestCode == PICK_IMAGE_FRONT) {
-                    imgFrontLicenseDiploma.setImageBitmap(bmp);
-                } else if (requestCode == PICK_IMAGE_BACK) {
-                    imgBackLicenseDiploma.setImageBitmap(bmp);
+                    if (requestCode == PICK_IMAGE_FRONT) {
+                        imgFrontLicenseDiploma.setImageBitmap(bmp);
+                    } else if (requestCode == PICK_IMAGE_BACK) {
+                        imgBackLicenseDiploma.setImageBitmap(bmp);
+                    }
                 }
-            } catch (FileNotFoundException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -305,19 +318,29 @@ public class AddContractFragment extends Fragment {
     AsyncTask<Void, Void, Void> mAsyncTask;
     public static final int PICK_IMAGE_FRONT = 101;
     public static final int PICK_IMAGE_BACK = 102;
+    public static final int SIGNATURE = 103;
 
     private void setupEvent() {
+        imgSignature.setOnClickListener(v -> {
+            startActivityForResult(SignatureActivity.getCallingActivity(getActivity()), SIGNATURE);
+        });
         imgBackLicenseDiploma.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_BACK);
+//            Intent intent = new Intent();
+//            intent.setType("image/*");
+//            intent.setAction(Intent.ACTION_GET_CONTENT);
+//            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_BACK);
+
+            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+            startActivityForResult(intent, PICK_IMAGE_BACK);
         });
         imgFrontLicenseDiploma.setOnClickListener(v -> {
-            Intent intent = new Intent();
-            intent.setType("image/*");
-            intent.setAction(Intent.ACTION_GET_CONTENT);
-            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_FRONT);
+//            Intent intent = new Intent();
+//            intent.setType("image/*");
+//            intent.setAction(Intent.ACTION_GET_CONTENT);
+//            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_FRONT);
+
+            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+            startActivityForResult(intent, PICK_IMAGE_FRONT);
         });
         btnSave.setOnClickListener(v -> {
             if (isValidInput()) {
@@ -331,14 +354,15 @@ public class AddContractFragment extends Fragment {
                         contractModel.setFullName(edtFullName.getText().toString());
                         contractModel.setDateOfBirth(edtDateOfBirth.getText().toString());
                         contractModel.setPhoneNumber(edtPhoneNumber.getText().toString());
+                        contractModel.setAddress(edtAddress.getText().toString());
 
                         Bitmap bmpBack = ImageUtils.convertImageViewToBitmap(imgBackLicenseDiploma);
                         Bitmap bmpFront = ImageUtils.convertImageViewToBitmap(imgFrontLicenseDiploma);
 
                         if(bmpBack != null && bmpFront != null) {
                             long timestamp = System.currentTimeMillis();
-                            String fileNameFront = timestamp + "";
-                            String fileNameBack = (timestamp + 1) + "";
+                            String fileNameFront = "front_" + timestamp + ""  + ".png";
+                            String fileNameBack = "back_" + timestamp + ""  + ".png";
 
                             contractModel.setPathBackLicense(fileNameBack);
                             contractModel.setPathFrontLicense(fileNameFront);

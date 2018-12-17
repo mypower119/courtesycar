@@ -16,6 +16,7 @@ import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -34,6 +35,7 @@ import vn.mtouch.courtesycar.data.db.model.BorrowContractModel;
 import vn.mtouch.courtesycar.data.db.model.CarModel;
 import vn.mtouch.courtesycar.data.db.model.roomdb.BorrowContractDBO;
 import vn.mtouch.courtesycar.presentation.features.list_car.ListCarFragment;
+import vn.mtouch.courtesycar.presentation.features.signature.SignatureActivity;
 import vn.mtouch.courtesycar.presentation.features.ui_utils.TransferActivity;
 import vn.mtouch.courtesycar.utils.AndroidUtilities;
 

@@ -12,10 +12,14 @@ import rx.Completable;
  */
 
 public class CarModel implements Comparable {
+    public static final int STATUS_NOT_BORROW = 0;
+    public static final int STATUS_BORROWING = STATUS_NOT_BORROW + 1;
+
     private long id;
     private String carName;
     private String carCode;
     private String qrCode;
+    private int status = STATUS_NOT_BORROW;
 
     public CarModel() {
 
@@ -26,12 +30,22 @@ public class CarModel implements Comparable {
         this.carName = carModel.getCarName();
         this.carCode = carModel.getCarCode();
         this.qrCode = carModel.getQrCode();
+        this.status = carModel.getStatus();
     }
 
-    public CarModel(String carName, String carCode, String qrCode) {
+    public CarModel(String carName, String carCode, String qrCode, int status) {
         this.carName = carName;
         this.carCode = carCode;
         this.qrCode = qrCode;
+        this.status = status;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     public String getQrCode() {
@@ -74,13 +88,13 @@ public class CarModel implements Comparable {
 
     public static ArrayList<CarModel> getInitDataFirst() {
         ArrayList<CarModel> arrayList = new ArrayList<>();
-        arrayList.add(new CarModel("Honda Accord", "PXB747", "1"));
-        arrayList.add(new CarModel("Nissan Maxima", "YPS617", "2"));
-        arrayList.add(new CarModel("Audi A4", "1HO4HG", "3"));
-        arrayList.add(new CarModel("Honda Jazz", "1LB3NT", "4"));
-        arrayList.add(new CarModel("Mitsubishi Pajero", "1KW6IT", "5"));
-        arrayList.add(new CarModel("Ford Fiesta", "1NP4IH", "6"));
-        arrayList.add(new CarModel("Subaru Liberty", "1KC2YS", "7"));
+        arrayList.add(new CarModel("Honda Accord", "PXB747", "1", STATUS_NOT_BORROW));
+        arrayList.add(new CarModel("Nissan Maxima", "YPS617", "2", STATUS_NOT_BORROW));
+        arrayList.add(new CarModel("Audi A4", "1HO4HG", "3", STATUS_NOT_BORROW));
+        arrayList.add(new CarModel("Honda Jazz", "1LB3NT", "4", STATUS_NOT_BORROW));
+        arrayList.add(new CarModel("Mitsubishi Pajero", "1KW6IT", "5", STATUS_NOT_BORROW));
+        arrayList.add(new CarModel("Ford Fiesta", "1NP4IH", "6", STATUS_NOT_BORROW));
+        arrayList.add(new CarModel("Subaru Liberty", "1KC2YS", "7", STATUS_NOT_BORROW));
         return arrayList;
     }
 }

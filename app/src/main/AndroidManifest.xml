@@ -28,11 +28,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".presentation.features.ui_utils.TransferActivity"></activity>
+        <activity android:name=".presentation.features.ui_utils.TransferActivity" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
+        <activity android:name=".presentation.features.signature.SignatureActivity"></activity>
     </application>
 
 </manifest>

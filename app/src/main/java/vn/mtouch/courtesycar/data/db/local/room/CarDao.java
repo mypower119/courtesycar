@@ -37,4 +37,7 @@ public interface CarDao {
 
     @Query("SELECT * from car where id = :id")
     CarDBO findCarById(long id);
+
+    @Query("SELECT * from car where code like :carCode and name like :carName")
+    CarDBO findCarByCarCodeAndName(String carCode, String carName);
 }

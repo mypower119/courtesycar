@@ -19,6 +19,7 @@ public class CarDiffCallback extends DiffUtil.Callback {
     public static final String KEY_NAME = "name";
     public static final String KEY_CODE = "code";
     public static final String KEY_QR_CODE = "qr_code";
+    public static final String KEY_STATUS = "status";
     List<CarModel> mOldCars;
     List<CarModel> mNewCars;
 
@@ -63,6 +64,9 @@ public class CarDiffCallback extends DiffUtil.Callback {
         }
         if(!newCar.getQrCode().equals(oldCar.getQrCode())) {
             bundleDiff.putString(KEY_QR_CODE, newCar.getQrCode());
+        }
+        if(newCar.getStatus() != oldCar.getStatus()) {
+            bundleDiff.putInt(KEY_QR_CODE, newCar.getStatus());
         }
         if(bundleDiff.size() == 0) {
             return null;

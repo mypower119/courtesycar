@@ -27,6 +27,8 @@ public class BorrowContractModel {
     private String licenseType;
     private String pathFrontLicense;
     private String pathBackLicense;
+    private String pathSignature;
+    private String address;
 
     public BorrowContractModel() {
 
@@ -35,7 +37,7 @@ public class BorrowContractModel {
     public BorrowContractModel(long id, String carName, String carCode,
                                Long timeIn, Long timeOut, String fullName,
                                String dateOfBirth, String phoneNumber, Integer state,
-                               String licenseType, String qrCode, String pathFront, String pathBack) {
+                               String licenseType, String qrCode, String pathFront, String pathBack, String pathSignature, String address) {
         this.id = id;
         this.carName = carName;
         this.carCode = carCode;
@@ -49,6 +51,24 @@ public class BorrowContractModel {
         this.qrCode = qrCode;
         this.pathFrontLicense = pathFront;
         this.pathBackLicense = pathBack;
+        this.pathSignature = pathSignature;
+        this.address = address;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPathSignature() {
+        return pathSignature;
+    }
+
+    public void setPathSignature(String pathSignature) {
+        this.pathSignature = pathSignature;
     }
 
     public String getPathFrontLicense() {

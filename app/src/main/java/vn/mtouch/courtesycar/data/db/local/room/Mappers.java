@@ -23,6 +23,7 @@ public class Mappers {
             carModel.setCarName(dbo.carName);
             carModel.setQrCode(dbo.qrCode);
             carModel.setId(dbo.id);
+            carModel.setStatus(dbo.status);
         }
 
         return carModel;
@@ -32,11 +33,11 @@ public class Mappers {
         BorrowContractModel contract = new BorrowContractModel();
 
         if (dbo != null) {
-            contract = new BorrowContractModel(
+            contract = new BorrowContractModel (
                     dbo.id, dbo.carName, dbo.carCode,
                     dbo.timeIn, dbo.timeOut, dbo.fullName, dbo.dateOfBirth,
                     dbo.phoneNumber, dbo.state, dbo.licenseType,
-                    dbo.qrCode, dbo.pathFrontLicense, dbo.pathBackLicense);
+                    dbo.qrCode, dbo.pathFrontLicense, dbo.pathBackLicense, dbo.pathSignature, dbo.address);
         }
         return contract;
     };

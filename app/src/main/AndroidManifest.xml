@@ -12,7 +12,7 @@
 
     <application
         android:name=".CourtesyCarApp"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
@@ -33,7 +33,7 @@
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:screenOrientation="fullSensor"
             tools:replace="screenOrientation" />
-        <activity android:name=".presentation.features.signature.SignatureActivity"></activity>
+        <activity android:name=".presentation.features.signature.SignatureActivity"/>
     </application>
 
 </manifest>

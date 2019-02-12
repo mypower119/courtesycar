@@ -3,11 +3,11 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "vn.mtouch.courtesycar2"
+        applicationId "vn.mtouch.courtesycarfinalver"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 6
-        versionName "6.0"
+        versionCode 7
+        versionName "7.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -62,4 +62,6 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
 
     implementation 'com.github.gcacace:signature-pad:1.2.1'
+
+    implementation 'com.squareup.picasso:picasso:2.5.2'
 }

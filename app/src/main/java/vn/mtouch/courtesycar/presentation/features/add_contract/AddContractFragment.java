@@ -2,11 +2,17 @@ package vn.mtouch.courtesycar.presentation.features.add_contract;
 
 import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -27,8 +33,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -162,27 +173,42 @@ public class AddContractFragment extends Fragment {
             edtDateOfBirth.setText(ConvertUtil.convertObjectToString(contractModel.getDateOfBirth()));
             edtPhoneNumber.setText(ConvertUtil.convertObjectToString(contractModel.getPhoneNumber()));
             edtAddress.setText(ConvertUtil.convertObjectToString(contractModel.getAddress()));
-            new AsyncTask<Void, Void, List<Bitmap>>() {
-                @Override
-                protected List<Bitmap> doInBackground(Void... voids) {
-                    ArrayList<Bitmap> bitmaps = new ArrayList<>();
-                    bitmaps.add(ImageUtils.getBitmap(contractModel.getPathBackLicense()));
-                    bitmaps.add(ImageUtils.getBitmap(contractModel.getPathFrontLicense()));
-                    bitmaps.add(ImageUtils.getBitmap(contractModel.getPathSignature()));
-                    return bitmaps;
-                }
+//            new AsyncTask<Void, Void, List<Bitmap>>() {
+//                @Override
+//                protected List<Bitmap> doInBackground(Void... voids) {
+//                    ArrayList<Bitmap> bitmaps = new ArrayList<>();
+//                    bitmaps.add(ImageUtils.getBitmap(contractModel.getPathBackLicense()));
+//                    bitmaps.add(ImageUtils.getBitmap(contractModel.getPathFrontLicense()));
+//                    bitmaps.add(ImageUtils.getBitmap(contractModel.getPathSignature()));
+//                    return bitmaps;
+//                }
+//
+//                @Override
+//                protected void onPostExecute(List<Bitmap> bitmaps) {
+//                    super.onPostExecute(bitmaps);
+//                    if(bitmaps.size() >= 2) {
+//                        imgBackLicenseDiploma.setImageBitmap(bitmaps.get(0));
+//                        imgFrontLicenseDiploma.setImageBitmap(bitmaps.get(1));
+//                        imgSignature.setImageBitmap(bitmaps.get(2));
+//
+//                        pathBack = contractModel.getPathBackLicense();
+//                        pathFront = contractModel.getPathFrontLicense();
+//                        Picasso.with(getActivity()).load(getImageUri(getActivity(), bitmaps.get(0))).resize(350,350).into(imgBackLicenseDiploma);
+//                        Picasso.with(getActivity()).load(getImageUri(getActivity(), bitmaps.get(1))).resize(350,350).into(imgFrontLicenseDiploma);
+//                        Picasso.with(getActivity()).load(getImageUri(getActivity(), bitmaps.get(2))).resize(350,350).into(imgSignature);
+//                    }
+//                }
+//            }.execute();
 
-                @Override
-                protected void onPostExecute(List<Bitmap> bitmaps) {
-                    super.onPostExecute(bitmaps);
-                    if(bitmaps.size() >= 2) {
-                        imgBackLicenseDiploma.setImageBitmap(bitmaps.get(0));
-                        imgFrontLicenseDiploma.setImageBitmap(bitmaps.get(1));
-                        imgSignature.setImageBitmap(bitmaps.get(2));
-                    }
-                }
-            }.execute();
+            pathBack = contractModel.getPathBackLicense();
+            pathFront = contractModel.getPathFrontLicense();
+            File file1 = new File(ImageUtils.getPathSavedImage(pathBack));
+            File file2 = new File(ImageUtils.getPathSavedImage(pathFront));
+            File file3 = new File(ImageUtils.getPathSavedImage(contractModel.getPathSignature()));
 
+            Picasso.with(getActivity()).load(file1).fit().centerInside().into(imgBackLicenseDiploma);
+            Picasso.with(getActivity()).load(file2).fit().centerInside().into(imgFrontLicenseDiploma);
+            Picasso.with(getActivity()).load(file3).fit().centerInside().into(imgSignature);
         } else {
             contractModel = new BorrowContractModel();
             contractModel.setTimeIn(Calendar.getInstance().getTimeInMillis());
@@ -226,6 +252,13 @@ public class AddContractFragment extends Fragment {
                 break;
             }
         }
+    }
+
+    public Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage, "Title", null);
+        return Uri.parse(path);
     }
 
     private void setInfoCar(CarModel car) {
@@ -282,37 +315,110 @@ public class AddContractFragment extends Fragment {
     private void showErrorToast(String msg) {
         Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
+    private Uri photoUriBack;
+    private Uri photoUriFront;
+    private void showCamera(int actionCamera) {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(getContext().getPackageManager()) != null) {
+            File file = null;
+            try {
+                file = createImageFile(actionCamera);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            photoUriBack = null;
+            photoUriFront = null;
+            if (file != null) {
+                switch (actionCamera) {
+                    case PICK_IMAGE_BACK:
+                        photoUriBack = Uri.fromFile(file);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUriBack);
+                        break;
+                    case PICK_IMAGE_FRONT:
+                        photoUriFront = Uri.fromFile(file);
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUriFront);
+                        break;
+                }
+                startActivityForResult(intent, actionCamera);
+            }
+        }
+    }
+
+    String pathBack = "";
+    String pathFront = "";
+    private File createImageFile(int actionCamera) throws IOException {
+        // Create an image file name
+        String timeStamp = "";
+        long timestamp = System.currentTimeMillis();
+        switch (actionCamera) {
+            case PICK_IMAGE_BACK:
+                pathBack = timeStamp = "back_" + timestamp;
+                break;
+            case PICK_IMAGE_FRONT:
+                pathFront = timeStamp = "front_" + timestamp;
+                break;
+            default:
+                timeStamp = "lost_" + timestamp;
+                break;
+        }
+        File storageDir = getContext().getExternalFilesDir(ImageUtils.returnLicenseFilePath());
+        return File.createTempFile(timeStamp, ".png", storageDir);
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (data == null) {
-                //Display an error
-                return;
-            }
-            try {
-//                InputStream inputStream = getActivity().getContentResolver().openInputStream(data.getData());
-//                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
-//                Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
-                if(requestCode == SIGNATURE) {
-                    String imageName = data.getStringExtra("imageName");
-                    imgSignature.setImageBitmap(ImageUtils.getBitmap(imageName));
-                    contractModel.setPathSignature(imageName);
-                } else {
-                    Bitmap bmp = (Bitmap) data.getExtras().get("data");
-                    //bmp = Bitmap.createScaledBitmap(bmp, 80, 80, false);
 
-                    if (requestCode == PICK_IMAGE_FRONT) {
-                        imgFrontLicenseDiploma.setImageBitmap(bmp);
-                    } else if (requestCode == PICK_IMAGE_BACK) {
-                        imgBackLicenseDiploma.setImageBitmap(bmp);
+        if (resultCode == Activity.RESULT_OK) {
+            if(requestCode == SIGNATURE) {
+                String imageName = data.getStringExtra("imageName");
+                imgSignature.setImageBitmap(ImageUtils.getBitmap(imageName));
+                contractModel.setPathSignature(imageName);
+            } else {
+                if (requestCode == PICK_IMAGE_FRONT) {
+                    if (photoUriFront != null) {
+                        //imgFrontLicenseDiploma.setImageURI(photoUri);
+                        Picasso.with(getActivity()).load(photoUriFront).resize(350,350).into(imgFrontLicenseDiploma);
                     }
+                    //imgFrontLicenseDiploma.setImageBitmap(bmp);
+                } else if (requestCode == PICK_IMAGE_BACK) {
+                    if (photoUriBack != null) {
+                        //imgBackLicenseDiploma.setImageURI(photoUri);
+                        Picasso.with(getActivity()).load(photoUriBack).resize(350,350).into(imgBackLicenseDiploma);
+                    }
+                    //imgBackLicenseDiploma.setImageBitmap(bmp);
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         }
+
+//        if (resultCode == Activity.RESULT_OK) {
+//            if (data == null) {
+//                //Display an error
+//                return;
+//            }
+//            try {
+////                InputStream inputStream = getActivity().getContentResolver().openInputStream(data.getData());
+////                BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+////                Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
+//                if(requestCode == SIGNATURE) {
+//                    String imageName = data.getStringExtra("imageName");
+//                    imgSignature.setImageBitmap(ImageUtils.getBitmap(imageName));
+//                    contractModel.setPathSignature(imageName);
+//                } else {
+//                    Bitmap bmp = (Bitmap) data.getExtras().get("data");
+//                    //bmp = Bitmap.createScaledBitmap(bmp, 80, 80, false);
+//
+//                    Uri uri = data.getData();
+//                    if (requestCode == PICK_IMAGE_FRONT) {
+//                        imgFrontLicenseDiploma.setImageBitmap(bmp);
+//                    } else if (requestCode == PICK_IMAGE_BACK) {
+//                        imgBackLicenseDiploma.setImageBitmap(bmp);
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
     }
 
     AsyncTask<Void, Void, Void> mAsyncTask;
@@ -330,8 +436,9 @@ public class AddContractFragment extends Fragment {
 //            intent.setAction(Intent.ACTION_GET_CONTENT);
 //            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_BACK);
 
-            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-            startActivityForResult(intent, PICK_IMAGE_BACK);
+//            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+//            startActivityForResult(intent, PICK_IMAGE_BACK);
+            showCamera(PICK_IMAGE_BACK);
         });
         imgFrontLicenseDiploma.setOnClickListener(v -> {
 //            Intent intent = new Intent();
@@ -339,8 +446,9 @@ public class AddContractFragment extends Fragment {
 //            intent.setAction(Intent.ACTION_GET_CONTENT);
 //            startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_FRONT);
 
-            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-            startActivityForResult(intent, PICK_IMAGE_FRONT);
+//            Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+//            startActivityForResult(intent, PICK_IMAGE_FRONT);
+            showCamera(PICK_IMAGE_FRONT);
         });
         btnSave.setOnClickListener(v -> {
             if (isValidInput()) {
@@ -356,19 +464,13 @@ public class AddContractFragment extends Fragment {
                         contractModel.setPhoneNumber(edtPhoneNumber.getText().toString());
                         contractModel.setAddress(edtAddress.getText().toString());
 
-                        Bitmap bmpBack = ImageUtils.convertImageViewToBitmap(imgBackLicenseDiploma);
-                        Bitmap bmpFront = ImageUtils.convertImageViewToBitmap(imgFrontLicenseDiploma);
-
-                        if(bmpBack != null && bmpFront != null) {
-                            long timestamp = System.currentTimeMillis();
-                            String fileNameFront = "front_" + timestamp + ""  + ".png";
-                            String fileNameBack = "back_" + timestamp + ""  + ".png";
-
-                            contractModel.setPathBackLicense(fileNameBack);
-                            contractModel.setPathFrontLicense(fileNameFront);
-
-                            ImageUtils.saveImageToStorage(fileNameBack, bmpBack);
-                            ImageUtils.saveImageToStorage(fileNameFront, bmpFront);
+                        if(photoUriBack != null) {
+                            contractModel.setPathBackLicense(pathBack + ".png");
+                            ImageUtils.saveFile(getActivity(), "", photoUriBack, ImageUtils.returnLicenseFilePath(), contractModel.getPathBackLicense());
+                        }
+                        if(photoUriFront != null) {
+                            contractModel.setPathFrontLicense(pathFront + ".png");
+                            ImageUtils.saveFile(getActivity(), "", photoUriFront, ImageUtils.returnLicenseFilePath(), contractModel.getPathFrontLicense());
                         }
                         if (isCreate) {
                             mViewModel.addContract(contractModel);

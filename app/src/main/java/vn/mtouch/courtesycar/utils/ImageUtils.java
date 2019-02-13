@@ -231,16 +231,14 @@ public class ImageUtils {
 
     public static final int REQUEST_PERMISSION_WRITE_READ = 8;
     public static void askStoragePermission(Context context) {
-
         int permissionWrite = ContextCompat.checkSelfPermission(context, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
         int permissionRead = ContextCompat.checkSelfPermission(context, android.Manifest.permission.READ_EXTERNAL_STORAGE);
+        int permissionCamera = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA);
 
-        if (permissionRead == PackageManager.PERMISSION_DENIED || permissionWrite == PackageManager.PERMISSION_DENIED) {
+        if (permissionRead == PackageManager.PERMISSION_DENIED || permissionWrite == PackageManager.PERMISSION_DENIED || permissionCamera == PackageManager.PERMISSION_DENIED) {
             if (Build.VERSION.SDK_INT >= 23) {
-                if (permissionRead == PackageManager.PERMISSION_DENIED || permissionWrite == PackageManager.PERMISSION_DENIED) {
-                    String[] permissions = new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
-                    ActivityCompat.requestPermissions((Activity) context, permissions, REQUEST_PERMISSION_WRITE_READ);
-                }
+                String[] permissions = new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA};
+                ActivityCompat.requestPermissions((Activity) context, permissions, REQUEST_PERMISSION_WRITE_READ);
             }
         }
     }

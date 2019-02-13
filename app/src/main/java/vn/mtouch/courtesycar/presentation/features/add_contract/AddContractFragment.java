@@ -326,15 +326,16 @@ public class AddContractFragment extends Fragment {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            photoUriBack = null;
-            photoUriFront = null;
+
             if (file != null) {
                 switch (actionCamera) {
                     case PICK_IMAGE_BACK:
+                        photoUriBack = null;
                         photoUriBack = Uri.fromFile(file);
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUriBack);
                         break;
                     case PICK_IMAGE_FRONT:
+                        photoUriFront = null;
                         photoUriFront = Uri.fromFile(file);
                         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUriFront);
                         break;

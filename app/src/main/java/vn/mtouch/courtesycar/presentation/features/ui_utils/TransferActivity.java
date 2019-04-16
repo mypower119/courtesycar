@@ -3,6 +3,7 @@ package vn.mtouch.courtesycar.presentation.features.ui_utils;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.StrictMode;
 
 import com.google.gson.Gson;
 
@@ -30,6 +31,10 @@ public class TransferActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_transfer);
+
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
         mUnbinder = ButterKnife.bind(this);
         boolean isCreate =  getIntent().getBooleanExtra(EXTRA_IS_CREATE, false);
         replaceFragment(R.id.fragment, AddContractFragment.newInstance(getIntent().getStringExtra(EXTRA_OBJECT), isCreate));

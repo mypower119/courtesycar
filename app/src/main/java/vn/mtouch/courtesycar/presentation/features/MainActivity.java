@@ -37,6 +37,7 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(R.string.contracts);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -98,14 +99,20 @@ public class MainActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
+        this.menu.findItem(R.id.action_filter).setVisible(false);
         if (id == R.id.nav_camera) {
             // Handle the camera action
             this.menu.findItem(R.id.action_filter).setVisible(true);
             replaceFragment(R.id.fragment, ContractFragment.newInstance(1));
+            getSupportActionBar().setTitle(R.string.contracts);
         } else if (id == R.id.nav_gallery) {
-            this.menu.findItem(R.id.action_filter).setVisible(false);
             replaceFragment(R.id.fragment, ListCarFragment.newInstance());
+            getSupportActionBar().setTitle(R.string.list_car);
+        } else if (id == R.id.nav_cloud) {
+            replaceFragment(R.id.fragment, ListCarFragment.newInstance());
+            getSupportActionBar().setTitle(R.string.cloud_backup_restore);
+        } else if (id == R.id.nav_exit) {
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

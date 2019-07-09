@@ -7,19 +7,19 @@
         <item
             android:id="@+id/nav_camera"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Contracts" />
+            android:title="@string/contracts" />
         <item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="List car" />
+            android:title="@string/list_car" />
         <item
             android:id="@+id/nav_cloud"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Cloud backup/restore" />
+            android:title="@string/cloud_backup_restore" />
         <item
             android:id="@+id/nav_exit"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Exit" />
+            android:title="@string/exit" />
     </group>
 
 </menu>

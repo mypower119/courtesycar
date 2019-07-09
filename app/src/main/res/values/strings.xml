@@ -47,4 +47,9 @@
     <string name="signature">Signature</string>
     <string name="address">Address</string>
 
+    <string name="contracts">Contracts</string>
+    <string name="list_car">List car</string>
+    <string name="cloud_backup_restore">Cloud backup/restore</string>
+    <string name="exit">Exit</string>
+
 </resources>

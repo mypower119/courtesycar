@@ -1,7 +1,7 @@
 package vn.mtouch.courtesycar.data.db;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.Transformations;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Transformations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +56,15 @@ public class Repository {
         });
     }
 
+    public List<CarModel> getAllCars() {
+        List<CarDBO> cars = mRoomDataManager.getAllCars();
+        List<CarModel> ret = new ArrayList<>();
+        for(CarDBO itemBDO: cars) {
+            ret.add(Mappers.FROM_DBO_TO_CAR.map(itemBDO));
+        }
+        return ret;
+    }
+
     public List<CarModel> findCarByQrCode(String qrCode) {
         List<CarDBO> cars = mRoomDataManager.findCarByQrCode(qrCode);
         List<CarModel> ret = new ArrayList<>();
@@ -83,6 +92,20 @@ public class Repository {
             }
             return ret;
         });
+    }
+
+    public List<BorrowContractModel> getAllContracts() {
+        List<BorrowContractDBO> contracts = mRoomDataManager.getAllContracts();
+        List<BorrowContractModel> ret = new ArrayList<>();
+        for(BorrowContractDBO itemBDO: contracts) {
+            ret.add(Mappers.FROM_DBO_TO_CONTRACT.map(itemBDO));
+        }
+        return ret;
+    }
+
+    public void clearAllData() {
+        mRoomDataManager.clearCars();
+        mRoomDataManager.clearContract();
     }
 
     public Completable initDummyData() {

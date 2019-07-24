@@ -1,11 +1,11 @@
 package vn.mtouch.courtesycar.presentation.base_view;
 
 import android.graphics.Color;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 
 import vn.mtouch.courtesycar.R;
@@ -21,8 +21,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         toolbar.setTitle(idResourceTitle);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(Color.WHITE);
-        //toolbar.setNavigationIcon(R.drawable.left_arrow);
-        //toolbar.setNavigationIcon(R.drawable.ic_action_back_white);
+        toolbar.setNavigationIcon(R.drawable.ic_back);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

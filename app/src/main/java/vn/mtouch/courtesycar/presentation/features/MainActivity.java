@@ -1,28 +1,21 @@
 package vn.mtouch.courtesycar.presentation.features;
 
-import android.Manifest;
-import android.app.Activity;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.navigation.NavigationView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import vn.mtouch.courtesycar.R;
 import vn.mtouch.courtesycar.presentation.base_view.BaseActivity;
+import vn.mtouch.courtesycar.presentation.features.backup_restore.BackupRestoreActivity;
 import vn.mtouch.courtesycar.presentation.features.filter_contracts.FilterContractDialog;
 import vn.mtouch.courtesycar.presentation.features.list_car.ListCarFragment;
 import vn.mtouch.courtesycar.presentation.features.list_contract.ContractFragment;
@@ -109,8 +102,9 @@ public class MainActivity extends BaseActivity
             replaceFragment(R.id.fragment, ListCarFragment.newInstance());
             getSupportActionBar().setTitle(R.string.list_car);
         } else if (id == R.id.nav_cloud) {
-            replaceFragment(R.id.fragment, ListCarFragment.newInstance());
-            getSupportActionBar().setTitle(R.string.cloud_backup_restore);
+//            replaceFragment(R.id.fragment, ListCarFragment.newInstance());
+//            getSupportActionBar().setTitle(R.string.cloud_backup_restore);
+            startActivity(BackupRestoreActivity.getCallingIntent(this));
         } else if (id == R.id.nav_exit) {
             finish();
         }

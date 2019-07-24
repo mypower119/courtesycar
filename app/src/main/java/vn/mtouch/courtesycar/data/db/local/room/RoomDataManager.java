@@ -1,17 +1,19 @@
 package vn.mtouch.courtesycar.data.db.local.room;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.db.SupportSQLiteDatabase;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.migration.Migration;
+import androidx.lifecycle.LiveData;
+import androidx.sqlite.db.SupportSQLiteDatabase;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.room.migration.Migration;
 import android.content.Context;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.util.Calendar;
 import java.util.List;
 
 import rx.Completable;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action0;
 import rx.schedulers.Schedulers;
 import vn.mtouch.courtesycar.CourtesyCarApp;
@@ -122,6 +124,19 @@ public class RoomDataManager {
         return mCarDao.getAllCars();
     }
 
+    public List<CarDBO> getAllCars() {
+        // can transfer here
+        return mCarDao.getCars();
+    }
+
+    public void clearCars() {
+        mCarDao.deleteAll(mCarDao.getCars());
+    }
+
+    public void clearContract() {
+        mBorrowContractDao.deleteAllContract(mBorrowContractDao.getAllContracts());
+    }
+
     public List<CarDBO> findCarByQrCode(String qrCode) {
         // can transfer here
         return mCarDao.findCarByQrCode(qrCode);
@@ -139,6 +154,10 @@ public class RoomDataManager {
         long dateTo = SharePreferenceManager.getLong(CourtesyCarApp.getAppContext(), ConstantsPrefs.FILTER_TO_DATE_VALUE, ConvertUtil.setMaximumCalendar(Calendar.getInstance()).getTimeInMillis());
         long dateFrom = SharePreferenceManager.getLong(CourtesyCarApp.getAppContext(), ConstantsPrefs.FILTER_FROM_DATE_VALUE, ConvertUtil.setMinimumCalendar(Calendar.getInstance()).getTimeInMillis());
         return mBorrowContractDao.getAllContract(query, state, isReportByDate, dateFrom, dateTo);
+    }
+
+    public List<BorrowContractDBO> getAllContracts() {
+        return mBorrowContractDao.getAllContracts();
     }
 
     public Completable asyncSaveCar(final CarModel carModel) {

@@ -1,5 +1,8 @@
 package vn.mtouch.courtesycar.data.db.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Copyright (C) 2016, Mobitouch.
  *
@@ -14,20 +17,50 @@ public class BorrowContractModel {
     public static final int STATE_RETURNED = ALL_STATE + 2;
 
 
+    @SerializedName("id")
+    @Expose
     private long id;
+    @SerializedName("carName")
+    @Expose
     private String carName;
+    @SerializedName("carCode")
+    @Expose
     private String carCode;
+    @SerializedName("qrCode")
+    @Expose
     private String qrCode;
+    @SerializedName("timeIn")
+    @Expose
     private Long timeIn;
+    @SerializedName("timeOut")
+    @Expose
     private Long timeOut;
+    @SerializedName("fullName")
+    @Expose
     private String fullName;
+    @SerializedName("dateOfBirth")
+    @Expose
     private String dateOfBirth;
+    @SerializedName("phoneNumber")
+    @Expose
     private String phoneNumber;
+    @SerializedName("state")
+    @Expose
     private Integer state = STATE_NEW_BORROW;
+    @SerializedName("licenseType")
+    @Expose
     private String licenseType;
+    @SerializedName("pathFrontLicense")
+    @Expose
     private String pathFrontLicense;
+    @SerializedName("pathBackLicense")
+    @Expose
     private String pathBackLicense;
+    @SerializedName("pathSignature")
+    @Expose
     private String pathSignature;
+    @SerializedName("address")
+    @Expose
     private String address;
 
     public BorrowContractModel() {

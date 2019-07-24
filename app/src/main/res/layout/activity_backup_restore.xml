@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="vn.mtouch.courtesycar.presentation.features.backup_restore.BackupRestoreActivity">
+
+    <include layout="@layout/toolbar"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:visibility="gone"
+        android:layout_below="@+id/toolbar"
+        android:id="@+id/rv_files"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/sw_layout"
+        android:layout_below="@+id/toolbar"
+        android:layout_above="@+id/btn_take_backup"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ListView
+            android:layout_below="@+id/toolbar"
+            android:layout_above="@+id/btn_take_backup"
+            android:id="@+id/listViewResults"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </ListView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    <Button
+        android:id="@+id/btn_take_backup"
+        android:text="Take backup"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

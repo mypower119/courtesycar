@@ -4,15 +4,11 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.multidex.MultiDex;
-import android.support.multidex.MultiDexApplication;
+import androidx.multidex.MultiDex;
+import androidx.multidex.MultiDexApplication;
 
-import rx.Scheduler;
-import rx.schedulers.Schedulers;
-import vn.mtouch.courtesycar.data.db.Repository;
 import vn.mtouch.courtesycar.data.db.local.room.RoomDataManager;
 import vn.mtouch.courtesycar.utils.LogManager;
-import vn.mtouch.courtesycar.utils.SimpleCompletableSubscriber;
 
 /**
  * Copyright (C) 2016, Mobitouch.

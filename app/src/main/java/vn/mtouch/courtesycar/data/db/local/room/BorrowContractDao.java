@@ -1,14 +1,15 @@
 package vn.mtouch.courtesycar.data.db.local.room;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
+import rx.Observable;
 import vn.mtouch.courtesycar.data.db.model.roomdb.BorrowContractDBO;
 
 /**
@@ -29,6 +30,11 @@ public interface BorrowContractDao {
             "")
     LiveData<List<BorrowContractDBO>> getAllContract(String query, int stateQuery, int isReportDateFromDateTo, long timeIn, long timeOut);
 
+
+    @Query("Select * " +
+            "from borrow_contract ")
+    List<BorrowContractDBO> getAllContracts();
+
     @Insert
     long insertBorrowContract(BorrowContractDBO dbo);
 
@@ -39,7 +45,7 @@ public interface BorrowContractDao {
     void deleteBorrowContract(BorrowContractDBO dbo);
 
     @Delete
-    void deleteAllContract(BorrowContractDBO... dbos);
+    void deleteAllContract(List<BorrowContractDBO> dbos);
 
     @Query("Select * from borrow_contract where id = :id")
     BorrowContractDBO findContactById(long id);

@@ -1,22 +1,21 @@
 package vn.mtouch.courtesycar.presentation.features.list_contract;
 
 import android.app.SearchManager;
-import android.arch.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
-import android.support.v7.view.menu.ShowableListMenu;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.view.menu.ShowableListMenu;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
@@ -33,9 +32,6 @@ import vn.mtouch.courtesycar.CourtesyCarApp;
 import vn.mtouch.courtesycar.R;
 import vn.mtouch.courtesycar.data.db.model.BorrowContractModel;
 import vn.mtouch.courtesycar.data.db.model.CarModel;
-import vn.mtouch.courtesycar.data.db.model.roomdb.BorrowContractDBO;
-import vn.mtouch.courtesycar.presentation.features.list_car.ListCarFragment;
-import vn.mtouch.courtesycar.presentation.features.signature.SignatureActivity;
 import vn.mtouch.courtesycar.presentation.features.ui_utils.TransferActivity;
 import vn.mtouch.courtesycar.utils.AndroidUtilities;
 

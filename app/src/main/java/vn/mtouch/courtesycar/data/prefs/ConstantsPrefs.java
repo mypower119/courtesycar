@@ -24,6 +24,9 @@ public class ConstantsPrefs {
     public static final String FILTER_TO_DATE_VALUE = "com.evoteam.ecolauser.FILTER_TO_DATE"; // long
     public static final String FILTER_BY_STATUS = "com.evoteam.ecolauser.FILTER_BY_STATUS";// int
 
+
+    public static final String FOLDER_GOOGLE_DRIVE = "com.evoteam.ecolauser.FOLDER_GOOGLE_DRIVE";// int
+
     public static String getStrHTML(Context context) {
         return "<html xmlns:v=\"urn:schemas-microsoft-com:vml\"\n" +
                 "xmlns:o=\"urn:schemas-microsoft-com:office:office\"\n" +

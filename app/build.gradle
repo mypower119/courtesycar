@@ -1,4 +1,8 @@
 apply plugin: 'com.android.application'
+ext {
+    play_services_version = "17.0.0"
+    support_version = '1.0.0'
+}
 
 android {
     compileSdkVersion 28
@@ -6,9 +10,9 @@ android {
         applicationId "vn.mtouch.courtesycarfinalver"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 10
-        versionName "10.0"
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        versionCode 11
+        versionName "11.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -24,30 +28,33 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-    implementation 'com.android.support:support-v4:28.0.0'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
-    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation "androidx.appcompat:appcompat:$support_version"
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation "androidx.legacy:legacy-support-v4:$support_version"
+    implementation "androidx.recyclerview:recyclerview:$support_version"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.2'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
 
     // parse json, object -> gson
     implementation 'com.google.code.gson:gson:2.8.5'
     // butter knife (bind view)
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+//    implementation 'com.jakewharton:butterknife:8.8.1'
+//    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+    implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
 
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.multidex:multidex:2.0.0'
 
     // Room
-    implementation 'android.arch.persistence.room:runtime:1.1.1'
-    annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
+    implementation 'androidx.room:room-runtime:2.0.0'
+    annotationProcessor 'androidx.room:room-compiler:2.0.0'
 
     // LiveData
-    implementation "android.arch.lifecycle:extensions:1.1.1"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'org.jetbrains:annotations:15.0'
 
     // rxjava
@@ -64,4 +71,9 @@ dependencies {
     implementation 'com.github.gcacace:signature-pad:1.2.1'
 
     implementation 'com.squareup.picasso:picasso:2.5.2'
+
+    // Google Drive
+    implementation "com.google.android.gms:play-services-auth:$play_services_version"
+    implementation "com.google.android.gms:play-services-drive:$play_services_version"
+    implementation 'com.squareup.okio:okio:1.15.0'
 }

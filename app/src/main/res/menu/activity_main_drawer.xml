@@ -13,6 +13,7 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/list_car" />
         <item
+            android:checkable="false"
             android:id="@+id/nav_cloud"
             android:icon="@drawable/ic_menu_slideshow"
             android:title="@string/cloud_backup_restore" />

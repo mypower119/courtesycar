@@ -1,15 +1,14 @@
 package vn.mtouch.courtesycar.presentation.base_view;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.View;
 
 import vn.mtouch.courtesycar.CourtesyCarApp;
-import vn.mtouch.courtesycar.R;
 
 /**
  * Created by 14617 on 22/1/2018.

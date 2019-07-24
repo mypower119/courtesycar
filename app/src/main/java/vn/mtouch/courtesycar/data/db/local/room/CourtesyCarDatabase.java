@@ -1,11 +1,10 @@
 package vn.mtouch.courtesycar.data.db.local.room;
 
-import android.arch.persistence.db.SupportSQLiteOpenHelper;
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.DatabaseConfiguration;
-import android.arch.persistence.room.InvalidationTracker;
-import android.arch.persistence.room.RoomDatabase;
-import android.support.annotation.NonNull;
+import androidx.sqlite.db.SupportSQLiteOpenHelper;
+import androidx.room.Database;
+import androidx.room.DatabaseConfiguration;
+import androidx.room.InvalidationTracker;
+import androidx.room.RoomDatabase;
 
 import vn.mtouch.courtesycar.data.db.model.roomdb.BorrowContractDBO;
 import vn.mtouch.courtesycar.data.db.model.roomdb.CarDBO;
@@ -17,7 +16,7 @@ import vn.mtouch.courtesycar.data.db.model.roomdb.CarDBO;
  * @since 11/29/18
  */
 
-@Database(entities = {BorrowContractDBO.class, CarDBO.class}, version = 5)
+@Database(entities = {BorrowContractDBO.class, CarDBO.class}, version = 5, exportSchema = false)
 public abstract class CourtesyCarDatabase extends RoomDatabase {
 
     public abstract BorrowContractDao getBorrowContractDao();
@@ -33,6 +32,4 @@ public abstract class CourtesyCarDatabase extends RoomDatabase {
     protected InvalidationTracker createInvalidationTracker() {
         return null;
     }
-
-
 }

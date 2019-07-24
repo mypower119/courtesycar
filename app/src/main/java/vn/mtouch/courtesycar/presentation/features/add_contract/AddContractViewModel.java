@@ -1,7 +1,7 @@
 package vn.mtouch.courtesycar.presentation.features.add_contract;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 

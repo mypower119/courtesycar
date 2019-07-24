@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_login"
+        android:orderInCategory="100"
+        android:title="@string/login" />
+    <item
+        android:id="@+id/action_choose_folder_backup_restore"
+        android:orderInCategory="100"
+        android:title="@string/choose_folder_sync" />
+    <item
+        android:visible="false"
+        android:id="@+id/action_create_folder_backup_restore"
+        android:orderInCategory="100"
+        android:title="@string/create_folder_sync" />
+    <item
+        android:id="@+id/action_sign_out"
+        android:orderInCategory="100"
+        android:title="@string/sign_out" />
+</menu>

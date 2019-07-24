@@ -1,7 +1,7 @@
 package vn.mtouch.courtesycar.presentation.base_view;
 
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AppCompatDialogFragment;
+import androidx.fragment.app.DialogFragment;
+import androidx.appcompat.app.AppCompatDialogFragment;
 
 /**
  * Created by 14617 on 18/2/2018.

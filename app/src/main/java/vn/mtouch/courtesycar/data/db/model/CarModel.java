@@ -1,5 +1,8 @@
 package vn.mtouch.courtesycar.data.db.model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 import rx.Completable;
@@ -15,10 +18,20 @@ public class CarModel implements Comparable {
     public static final int STATUS_NOT_BORROW = 0;
     public static final int STATUS_BORROWING = STATUS_NOT_BORROW + 1;
 
+    @SerializedName("id")
+    @Expose
     private long id;
+    @SerializedName("carName")
+    @Expose
     private String carName;
+    @SerializedName("carCode")
+    @Expose
     private String carCode;
+    @SerializedName("qrCode")
+    @Expose
     private String qrCode;
+    @SerializedName("status")
+    @Expose
     private int status = STATUS_NOT_BORROW;
 
     public CarModel() {

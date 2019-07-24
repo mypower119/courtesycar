@@ -1,8 +1,8 @@
 package vn.mtouch.courtesycar.presentation.features.add_car;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +14,6 @@ import butterknife.ButterKnife;
 import vn.mtouch.courtesycar.R;
 import vn.mtouch.courtesycar.data.db.Repository;
 import vn.mtouch.courtesycar.data.db.model.CarModel;
-import vn.mtouch.courtesycar.data.db.model.roomdb.CarDBO;
 import vn.mtouch.courtesycar.presentation.base_view.BaseDialog;
 
 /**

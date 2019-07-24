@@ -1,11 +1,11 @@
 package vn.mtouch.courtesycar.data.db.local.room;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Update;
+import androidx.lifecycle.LiveData;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -23,6 +23,9 @@ public interface CarDao {
     @Query("Select * from car")
     LiveData<List<CarDBO>> getAllCars();
 
+    @Query("Select * from car")
+    List<CarDBO> getCars();
+
     @Query("Select * from car where qr_code = :qrcode")
     List<CarDBO> findCarByQrCode(String qrcode);
 
@@ -34,6 +37,9 @@ public interface CarDao {
 
     @Delete
     void deleteCar(CarDBO dbo);
+
+    @Delete
+    void deleteAll(List<CarDBO> dbos);
 
     @Query("SELECT * from car where id = :id")
     CarDBO findCarById(long id);

@@ -33,7 +33,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
@@ -49,9 +49,9 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/bother_background_text" />
             </FrameLayout>
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1">
@@ -67,6 +67,6 @@
                     android:layout_height="match_parent"
                     android:background="@drawable/bother_background_text" />
             </FrameLayout>
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
 </LinearLayout>

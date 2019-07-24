@@ -6,12 +6,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".presentation.features.list_car.ListCarFragment">
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_cars"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         app:srcCompat="@android:drawable/ic_input_add"
         android:id="@+id/fab_add"
         android:layout_marginBottom="@dimen/activity_horizontal_margin"

@@ -6,12 +6,12 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.appcompat.app.AlertDialog;
 import android.text.TextUtils;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -89,7 +89,7 @@ public final class DialogUtils {
     public static Dialog showConfirmDeleteConversationDialog(@NonNull final Context context,
                                                              final DialogInterface.OnClickListener onPositiveClick,
                                                              final DialogInterface.OnClickListener onNegativeClick) {
-        android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(context);
+        androidx.appcompat.app.AlertDialog.Builder builder = new androidx.appcompat.app.AlertDialog.Builder(context);
 
         builder.setMessage("Xóa mặt hàng đã kiểm kê này ?")
                 .setCancelable(true)
@@ -104,7 +104,7 @@ public final class DialogUtils {
                     }
                 });
 
-        android.support.v7.app.AlertDialog dialog = builder.create();
+        androidx.appcompat.app.AlertDialog dialog = builder.create();
         dialog.show();
 
         return dialog;

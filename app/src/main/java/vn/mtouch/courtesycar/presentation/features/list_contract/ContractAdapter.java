@@ -2,12 +2,11 @@ package vn.mtouch.courtesycar.presentation.features.list_contract;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,7 +19,6 @@ import vn.mtouch.courtesycar.utils.ConvertUtil;
 import vn.mtouch.courtesycar.utils.DialogUtils;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 

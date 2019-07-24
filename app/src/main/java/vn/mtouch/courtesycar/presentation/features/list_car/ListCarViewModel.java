@@ -1,15 +1,12 @@
 package vn.mtouch.courtesycar.presentation.features.list_car;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
-import rx.Scheduler;
-import rx.schedulers.Schedulers;
 import vn.mtouch.courtesycar.data.db.Repository;
 import vn.mtouch.courtesycar.data.db.model.CarModel;
-import vn.mtouch.courtesycar.utils.SimpleCompletableSubscriber;
 
 public class ListCarViewModel extends ViewModel {
     private Repository mRepository;

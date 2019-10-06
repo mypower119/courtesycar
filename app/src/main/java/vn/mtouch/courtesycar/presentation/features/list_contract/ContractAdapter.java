@@ -19,6 +19,7 @@ import vn.mtouch.courtesycar.utils.ConvertUtil;
 import vn.mtouch.courtesycar.utils.DialogUtils;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class ContractAdapter extends RecyclerView.Adapter<ContractAdapter.ViewHo
     private List<BorrowContractModel> mItems;
     private ContractViewModel mViewModel;
     private Context mContext;
-    DateFormat df = DateFormat.getTimeInstance(DateFormat.SHORT);
+    SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss yyyy-MM-DD");
     boolean isDeleteContinueNotShowConfirm = false;
 
     public ContractAdapter(Context context, List<BorrowContractModel> items, ContractViewModel viewModel) {

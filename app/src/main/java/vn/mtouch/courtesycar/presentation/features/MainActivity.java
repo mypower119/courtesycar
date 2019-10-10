@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import vn.mtouch.courtesycar.R;
 import vn.mtouch.courtesycar.presentation.base_view.BaseActivity;
 import vn.mtouch.courtesycar.presentation.features.backup_restore.BackupRestoreActivity;
+import vn.mtouch.courtesycar.presentation.features.edit_term.EditTermActivity;
 import vn.mtouch.courtesycar.presentation.features.filter_contracts.FilterContractDialog;
 import vn.mtouch.courtesycar.presentation.features.list_car.ListCarFragment;
 import vn.mtouch.courtesycar.presentation.features.list_contract.ContractFragment;
@@ -104,7 +105,10 @@ public class MainActivity extends BaseActivity
         } else if (id == R.id.nav_cloud) {
 //            replaceFragment(R.id.fragment, ListCarFragment.newInstance());
 //            getSupportActionBar().setTitle(R.string.cloud_backup_restore);
+
             startActivity(BackupRestoreActivity.getCallingIntent(this));
+        }else if (id == R.id.nav_edit_term) {
+            startActivity(EditTermActivity.getCallingIntent(this));
         } else if (id == R.id.nav_exit) {
             finish();
         }

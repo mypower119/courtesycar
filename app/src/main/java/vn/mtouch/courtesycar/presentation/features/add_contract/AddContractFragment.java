@@ -142,11 +142,12 @@ public class AddContractFragment extends Fragment {
         progressDialogCustom = new ProgressDialogCustom(getActivity());
         wvContract.setVisibility(View.GONE);
         String contextHtML = ConstantsPrefs.getStrHTML(getActivity());
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            tvContract.setText(Html.fromHtml(contextHtML, Html.FROM_HTML_MODE_COMPACT));
-        } else {
-            tvContract.setText(Html.fromHtml(contextHtML));
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//            tvContract.setText(Html.fromHtml(contextHtML, Html.FROM_HTML_MODE_COMPACT));
+//        } else {
+//            tvContract.setText(Html.fromHtml(contextHtML));
+//        }
+        tvContract.setText(contextHtML);
 
         if (isCreate) {
             cbAgree.setChecked(false);

@@ -7,7 +7,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,6 +50,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import butterknife.BindView;
@@ -63,6 +66,8 @@ import vn.mtouch.courtesycar.presentation.base_view.BaseGoogleDriveActivity;
 import vn.mtouch.courtesycar.presentation.features.backup_restore.adapter.ResultsAdapter;
 import vn.mtouch.courtesycar.presentation.features.backup_restore.model.SyncDataModel;
 import vn.mtouch.courtesycar.utils.AndroidUtilities;
+import vn.mtouch.courtesycar.utils.BitmapUtils;
+import vn.mtouch.courtesycar.utils.ImageUtils;
 
 public class BackupRestoreActivity extends BaseGoogleDriveActivity implements ResultsAdapter.OnFileAdapterListener {
     @BindView(R.id.toolbar)
@@ -197,25 +202,258 @@ public class BackupRestoreActivity extends BaseGoogleDriveActivity implements Re
                 return;
             }
             swLayout.setRefreshing(true);
-            new Thread(new Runnable() {
+            Thread thread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     SyncDataModel syncDataModel = new SyncDataModel();
+                    syncDataModel.setTerm(ConstantsPrefs.getStrHTML(BackupRestoreActivity.this));
                     syncDataModel.setCars(Repository.getInstance().getAllCars());
-                    syncDataModel.setContracts(Repository.getInstance().getAllContracts());
+                    List<BorrowContractModel> borrowContractModelList = Repository.getInstance().getAllContracts();
+                    for(BorrowContractModel item : borrowContractModelList) {
+                        saveFileToDrive(ImageUtils.getBitmap(item.getPathFrontLicense()), item.getPathFrontLicense());
+                        saveFileToDrive(ImageUtils.getBitmap(item.getPathBackLicense()), item.getPathBackLicense());
+//                        item.setPathBackLicense(BitmapUtils.convertFileToBase64(ImageUtils.getPathSavedImage(item.getPathBackLicense())));
+//                        item.setPathFrontLicense(BitmapUtils.convertFileToBase64(ImageUtils.getPathSavedImage(item.getPathFrontLicense())));
+                    }
+                    syncDataModel.setContracts(borrowContractModelList);
                     String data = new Gson().toJson(syncDataModel);
+                    uploadDataToDrive(driveFolderCurrent, data);
                     AndroidUtilities.getsUIHandler().post(new Runnable() {
                         @Override
                         public void run() {
                             swLayout.setRefreshing(false);
-                            uploadDataToDrive(driveFolderCurrent, data);
+
                         }
                     });
 
                 }
-            }).start();
+            });
+            thread.setPriority(Thread.MAX_PRIORITY);
+            thread.start();
 
         });
+    }
+
+    @Override
+    public void restore(DriveFile file) {
+        retrieveContents(file);
+    }
+
+    private void retrieveContents(DriveFile file) {
+        // [START drive_android_open_file]
+        Task<DriveContents> openFileTask =
+                getDriveResourceClient().openFile(file, DriveFile.MODE_READ_ONLY);
+        // [END drive_android_open_file]
+        // [START drive_android_read_contents]
+        openFileTask
+                .continueWithTask(task -> {
+                    DriveContents contents = task.getResult();
+                    // Process contents...
+                    // [START_EXCLUDE]
+                    // [START drive_android_read_as_string]
+                    try (BufferedReader reader = new BufferedReader(
+                            new InputStreamReader(contents.getInputStream()))) {
+                        StringBuilder builder = new StringBuilder();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            builder.append(line);
+                        }
+                        showMessage(getString(R.string.content_loaded));
+
+                        String dataJson = builder.toString();
+                        swLayout.setRefreshing(true);
+                        new Thread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    SyncDataModel syncDataModel = new Gson().fromJson(dataJson, SyncDataModel.class);
+                                    if(!TextUtils.isEmpty(syncDataModel.getTerm())) {
+                                        SharePreferenceManager.putString(BackupRestoreActivity.this, ConstantsPrefs.TERM, syncDataModel.getTerm());
+                                    }
+                                    Repository.getInstance().clearAllData();
+                                    for(CarModel car : syncDataModel.getCars()) {
+                                        Repository.getInstance().saveCar(car);
+                                    }
+                                    for(BorrowContractModel contract : syncDataModel.getContracts()) {
+                                        Repository.getInstance().addContract(contract);
+                                    }
+                                    retrieveImage(syncDataModel.getContracts());
+                                    AndroidUtilities.getsUIHandler().post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            showMessage(getString(R.string.restore_success));
+                                            swLayout.setRefreshing(false);
+                                        }
+                                    });
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    AndroidUtilities.getsUIHandler().post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            showMessage(getString(R.string.read_failed) + " " + e.getMessage());
+                                            swLayout.setRefreshing(false);
+                                        }
+                                    });
+                                }
+
+                            }
+                        }).start();
+
+                    }
+                    // [END drive_android_read_as_string]
+                    // [END_EXCLUDE]
+                    // [START drive_android_discard_contents]
+                    Task<Void> discardTask = getDriveResourceClient().discardContents(contents);
+                    // [END drive_android_discard_contents]
+                    return discardTask;
+                })
+                .addOnFailureListener(e -> {
+                    // Handle failure
+                    // [START_EXCLUDE]
+                    Log.e(TAG, "Unable to read contents", e);
+                    showMessage(getString(R.string.read_failed));
+                    // [END_EXCLUDE]
+                });
+        // [END drive_android_read_contents]
+    }
+
+    private void retrieveImage(List<BorrowContractModel> contracts) {
+        if(driveFolderCurrent != null) {
+            Query query = new Query.Builder()
+                    .addFilter(Filters.eq(SearchableField.MIME_TYPE, "image/png"))
+//                    .addFilter(Filters.eq(SearchableField.MIME_TYPE, "image/jpeg"))
+                    .build();
+            // [START drive_android_query_children]
+            Task<MetadataBuffer> queryTask = getDriveResourceClient().queryChildren(driveFolderCurrent, query);
+            // END drive_android_query_children]
+            queryTask
+                    .addOnSuccessListener(this,
+                            metadataBuffer -> {
+                        for(Metadata metadata : metadataBuffer) {
+                            // TODO: check đúng tên file
+                            for(BorrowContractModel contract : contracts) {
+                                if(contract.getPathFrontLicense() != null && contract.getPathFrontLicense().equals(metadata.getTitle())) {
+                                    downloadImageAndUpdateDB(metadata, contract, true);
+                                }
+                                if(contract.getPathBackLicense() != null && contract.getPathBackLicense().equals(metadata.getTitle())) {
+                                    downloadImageAndUpdateDB(metadata, contract, false);
+                                }
+                            }
+                        }
+                    })
+                    .addOnFailureListener(this, e -> {
+                        Log.e(TAG, "Error retrieving files", e);
+                        showMessage(getString(R.string.query_failed));
+                    });
+        }
+    }
+
+    private void downloadImageAndUpdateDB(Metadata metadata, BorrowContractModel contract, boolean isFront) {
+        Task<DriveContents> openFileTask = getDriveResourceClient().openFile(metadata.getDriveId().asDriveFile(), DriveFile.MODE_READ_ONLY);
+        openFileTask
+                .continueWithTask(task -> {
+                    DriveContents contents = task.getResult();
+
+                    showMessage(getString(R.string.content_loaded));
+                    swLayout.setRefreshing(true);
+                    try {
+                        // TODO parse image lưu xuống folder app
+                        Bitmap bitmap = BitmapFactory.decodeStream(contents.getInputStream());
+                        if(isFront && bitmap != null) {
+                            ImageUtils.saveImageToStorage(contract.getPathFrontLicense(), bitmap);
+                        } else if(bitmap != null) {
+                            ImageUtils.saveImageToStorage(contract.getPathBackLicense(), bitmap);
+                        }
+
+                        AndroidUtilities.getsUIHandler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                showMessage(getString(R.string.restore_success));
+                                swLayout.setRefreshing(false);
+                            }
+                        });
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        AndroidUtilities.getsUIHandler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                showMessage(getString(R.string.read_failed) + " " + e.getMessage());
+                                swLayout.setRefreshing(false);
+                            }
+                        });
+                    }
+
+                    Task<Void> discardTask = getDriveResourceClient().discardContents(contents);
+                    return discardTask;
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Unable to read contents", e);
+                    showMessage(getString(R.string.read_failed));
+                });
+    }
+
+    /** Create a new file and save it to Drive. */
+    private void saveFileToDrive(Bitmap image, String fileName) {
+        try {
+            Task<DriveContents> tasks = getDriveResourceClient().createContents();
+            DriveContents contents = tasks.getResult();
+            OutputStream outputStream = contents.getOutputStream();
+            // Write the bitmap data from it.
+            ByteArrayOutputStream bitmapStream = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream);
+            try {
+                outputStream.write(bitmapStream.toByteArray());
+            } catch (IOException e) {
+                Log.w(TAG, "Unable to write file contents.", e);
+            }
+
+            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                    .setTitle(fileName)
+                    .setMimeType("image/png")
+                    .setStarred(true)
+                    .build();
+
+            Task<DriveFile> task = getDriveResourceClient().createFile(driveFolderCurrent, changeSet, tasks.getResult());
+            task.getResult();
+            if(task.isComplete()) {
+                Log.e(TAG, "upload image success");
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Unable to update image file", e);
+        }
+        // Start by creating a new contents, and setting a callback.
+//        Log.i(TAG, "Creating new contents.");
+//
+//        getDriveResourceClient()
+//                .createContents()
+//                .continueWithTask( (task) -> {
+//                    OutputStream outputStream = task.getResult().getOutputStream();
+//                    // Write the bitmap data from it.
+//                    ByteArrayOutputStream bitmapStream = new ByteArrayOutputStream();
+//                    image.compress(Bitmap.CompressFormat.PNG, 100, bitmapStream);
+//                    try {
+//                        outputStream.write(bitmapStream.toByteArray());
+//                    } catch (IOException e) {
+//                        Log.w(TAG, "Unable to write file contents.", e);
+//                    }
+//
+//                    MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+//                            .setTitle(fileName)
+//                            .setMimeType("image/png")
+//                            .setStarred(true)
+//                            .build();
+//
+//                    return getDriveResourceClient().createFile(driveFolderCurrent, changeSet, task.getResult());
+//                })
+//                .addOnSuccessListener(this,
+//                        driveFile -> {
+//                            showMessage(getString(R.string.file_created,
+//                                    driveFile.getDriveId().encodeToString()));
+//                        } )
+//                .addOnFailureListener(this, e -> {
+//                    Log.e(TAG, "Unable to create file", e);
+//                    showMessage(getString(R.string.file_create_error));
+//                });
     }
 
     @Override
@@ -285,6 +523,7 @@ public class BackupRestoreActivity extends BaseGoogleDriveActivity implements Re
         if(driveFolderCurrent != null) {
             Query query = new Query.Builder()
                     .addFilter(Filters.eq(SearchableField.MIME_TYPE, "text/plain"))
+//                    .addFilter(Filters.eq(SearchableField.MIME_TYPE, "image/jpeg"))
                     .build();
             // [START drive_android_query_children]
             Task<MetadataBuffer> queryTask = getDriveResourceClient().queryChildren(folder, query);
@@ -356,39 +595,63 @@ public class BackupRestoreActivity extends BaseGoogleDriveActivity implements Re
     }
 
     private void uploadDataToDrive(final DriveFolder parent, String data) {
-        getDriveResourceClient()
-                .createContents()
-                .continueWithTask(task -> {
-                    DriveContents contents = task.getResult();
-                    OutputStream outputStream = contents.getOutputStream();
+        try {
+            Task<DriveContents> tasks = getDriveResourceClient().createContents();
+            DriveContents contents = tasks.getResult();
+            OutputStream outputStream = contents.getOutputStream();
 
-                    try (Writer writer = new OutputStreamWriter(outputStream)) {
-                        writer.write(data);
-                    }
+            try (Writer writer = new OutputStreamWriter(outputStream)) {
+                writer.write(data);
+            }
 
-                    MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
-                            .setTitle(DATABASE_FILE_NAME)
-                            .setMimeType("text/plain")
-                            .setStarred(true)
-                            .build();
+            MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+                    .setTitle(DATABASE_FILE_NAME)
+                    .setMimeType("text/plain")
+                    .setStarred(true)
+                    .build();
+            Task<DriveFile> task = getDriveResourceClient().createFile(parent, changeSet, contents);
+            if(task.isComplete()) {
+                showMessage(getString(R.string.file_created, "upload database success"));
+            }
+            task.getResult();
+        } catch (Exception e) {
+            Log.e(TAG, "Unable to create file", e);
+        }
 
-                    return getDriveResourceClient().createFile(parent, changeSet, contents);
-                })
-                .addOnSuccessListener(this,
-                        driveFile -> {
-                            getFilesOnDrive();
-                            showMessage(getString(R.string.file_created,
-                                    driveFile.getDriveId().encodeToString()));
-                        } )
-                .addOnFailureListener(this, e -> {
-                    Log.e(TAG, "Unable to create file", e);
-                    showMessage(getString(R.string.file_create_error));
-                });
+
+//        getDriveResourceClient()
+//                .createContents()
+//                .continueWithTask(task -> {
+//                    DriveContents contents = task.getResult();
+//                    OutputStream outputStream = contents.getOutputStream();
+//
+//                    try (Writer writer = new OutputStreamWriter(outputStream)) {
+//                        writer.write(data);
+//                    }
+//
+//                    MetadataChangeSet changeSet = new MetadataChangeSet.Builder()
+//                            .setTitle(DATABASE_FILE_NAME)
+//                            .setMimeType("text/plain")
+//                            .setStarred(true)
+//                            .build();
+//
+//                    return getDriveResourceClient().createFile(parent, changeSet, contents);
+//                })
+//                .addOnSuccessListener(this,
+//                        driveFile -> {
+//                            getFilesOnDrive();
+//                            showMessage(getString(R.string.file_created,
+//                                    driveFile.getDriveId().encodeToString()));
+//                        } )
+//                .addOnFailureListener(this, e -> {
+//                    Log.e(TAG, "Unable to create file", e);
+//                    showMessage(getString(R.string.file_create_error));
+//                });
     }
 
 
 
-    private Task<Void> createFileIntentSender(DriveContents driveContents, Bitmap image) {
+    private Task<Void> createFileIntentSender(DriveContents driveContents, Bitmap image, String fileName) {
         Log.i(TAG, "New contents created.");
         // Get an output stream for the contents.
         OutputStream outputStream = driveContents.getOutputStream();
@@ -405,8 +668,8 @@ public class BackupRestoreActivity extends BaseGoogleDriveActivity implements Re
         // Note that the user will be able to change the title later.
         MetadataChangeSet metadataChangeSet =
                 new MetadataChangeSet.Builder()
-                        .setMimeType("image/jpeg")
-                        .setTitle("Android Photo.png")
+                        .setMimeType("image/png")
+                        .setTitle(fileName)
                         .build();
         // Set up options to configure and display the create file activity.
         CreateFileActivityOptions createFileActivityOptions =
@@ -445,85 +708,6 @@ public class BackupRestoreActivity extends BaseGoogleDriveActivity implements Re
                     showMessage(getString(R.string.delete_failed));
                 });
         // [END drive_android_delete_file]
-    }
-
-    @Override
-    public void restore(DriveFile file) {
-        retrieveContents(file);
-    }
-
-    private void retrieveContents(DriveFile file) {
-        // [START drive_android_open_file]
-        Task<DriveContents> openFileTask =
-                getDriveResourceClient().openFile(file, DriveFile.MODE_READ_ONLY);
-        // [END drive_android_open_file]
-        // [START drive_android_read_contents]
-        openFileTask
-                .continueWithTask(task -> {
-                    DriveContents contents = task.getResult();
-                    // Process contents...
-                    // [START_EXCLUDE]
-                    // [START drive_android_read_as_string]
-                    try (BufferedReader reader = new BufferedReader(
-                            new InputStreamReader(contents.getInputStream()))) {
-                        StringBuilder builder = new StringBuilder();
-                        String line;
-                        while ((line = reader.readLine()) != null) {
-                            builder.append(line);
-                        }
-                        showMessage(getString(R.string.content_loaded));
-
-                        String dataJson = builder.toString();
-                        swLayout.setRefreshing(true);
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    SyncDataModel syncDataModel = new Gson().fromJson(dataJson, SyncDataModel.class);
-                                    Repository.getInstance().clearAllData();
-                                    for(CarModel car : syncDataModel.getCars()) {
-                                        Repository.getInstance().saveCar(car);
-                                    }
-                                    for(BorrowContractModel contract : syncDataModel.getContracts()) {
-                                        Repository.getInstance().addContract(contract);
-                                    }
-                                    AndroidUtilities.getsUIHandler().post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            showMessage(getString(R.string.restore_success));
-                                            swLayout.setRefreshing(false);
-                                        }
-                                    });
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                    AndroidUtilities.getsUIHandler().post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            showMessage(getString(R.string.read_failed) + " " + e.getMessage());
-                                            swLayout.setRefreshing(false);
-                                        }
-                                    });
-                                }
-
-                            }
-                        }).start();
-
-                    }
-                    // [END drive_android_read_as_string]
-                    // [END_EXCLUDE]
-                    // [START drive_android_discard_contents]
-                    Task<Void> discardTask = getDriveResourceClient().discardContents(contents);
-                    // [END drive_android_discard_contents]
-                    return discardTask;
-                })
-                .addOnFailureListener(e -> {
-                    // Handle failure
-                    // [START_EXCLUDE]
-                    Log.e(TAG, "Unable to read contents", e);
-                    showMessage(getString(R.string.read_failed));
-                    // [END_EXCLUDE]
-                });
-        // [END drive_android_read_contents]
     }
 
 
@@ -571,19 +755,6 @@ public class BackupRestoreActivity extends BaseGoogleDriveActivity implements Re
         }
     }
 
-//    /** Create a new file and save it to Drive. */
-//    private void saveFileToDrive() {
-//        // Start by creating a new contents, and setting a callback.
-//        Log.i(TAG, "Creating new contents.");
-//        final Bitmap image = mBitmapToSave;
-//
-//        mDriveResourceClient
-//                .createContents()
-//                .continueWithTask(
-//                        task -> createFileIntentSender(task.getResult(), image))
-//                .addOnFailureListener(
-//                        e -> Log.w(TAG, "Failed to create new contents.", e));
-//    }
 //
 //    /**
 //     * Creates an {@link IntentSender} to start a dialog activity with configured {@link

@@ -15,6 +15,9 @@ public class SyncDataModel {
     @SerializedName("contracts")
     @Expose
     List<BorrowContractModel> contracts;
+    @SerializedName("term")
+    @Expose
+    String term;
 
     public List<CarModel> getCars() {
         return cars;
@@ -30,5 +33,13 @@ public class SyncDataModel {
 
     public void setContracts(List<BorrowContractModel> contracts) {
         this.contracts = contracts;
+    }
+
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
     }
 }

@@ -21,7 +21,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".presentation.features.backup_restore.BackupRestoreActivity"></activity>
+        <activity android:name=".presentation.features.edit_term.EditTermActivity"></activity>
+        <activity android:name=".presentation.features.backup_restore.BackupRestoreActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"

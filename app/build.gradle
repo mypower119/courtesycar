@@ -42,10 +42,8 @@ dependencies {
     // parse json, object -> gson
     implementation 'com.google.code.gson:gson:2.8.5'
     // butter knife (bind view)
-//    implementation 'com.jakewharton:butterknife:8.8.1'
-//    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
+    implementation 'com.jakewharton:butterknife:10.2.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.0'
 
     implementation 'androidx.multidex:multidex:2.0.0'
 

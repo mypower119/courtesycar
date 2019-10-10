@@ -15,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -491,6 +492,28 @@ public final class BitmapUtils {
                 default:
                     return ".jpg";
             }
+        }
+    }
+
+
+    public static String convertFileToBase64(String filePath) {
+        File imgFile = new File(filePath);
+        if (imgFile.exists() && imgFile.length() > 0) {
+            Bitmap bm = BitmapFactory.decodeFile(filePath);
+            ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.PNG, 100, bOut);
+            return  Base64.encodeToString(bOut.toByteArray(), Base64.DEFAULT);
+        }
+        return "";
+    }
+
+    public static Bitmap convertBase64ToBitmap(String encodedImage) {
+        try {
+            byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+            return BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return  null;
         }
     }
 }

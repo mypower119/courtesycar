@@ -8,6 +8,8 @@ import androidx.multidex.MultiDex;
 import androidx.multidex.MultiDexApplication;
 
 import vn.mtouch.courtesycar.data.db.local.room.RoomDataManager;
+import vn.mtouch.courtesycar.data.prefs.ConstantsPrefs;
+import vn.mtouch.courtesycar.data.prefs.SharePreferenceManager;
 import vn.mtouch.courtesycar.utils.LogManager;
 
 /**

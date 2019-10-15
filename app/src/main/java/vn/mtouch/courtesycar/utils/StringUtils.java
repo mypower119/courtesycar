@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.text.Normalizer;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 /**
@@ -12,6 +14,11 @@ import java.util.Locale;
  * @since 18/08/2017
  */
 public final class StringUtils {
+
+    public static String returnNow() {
+        String dateTime = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss").format(new Date());
+        return dateTime;
+    }
 
     private StringUtils() {
         throw new UnsupportedOperationException();
